@@ -121,8 +121,21 @@ jobs:
               exit 1
             fi
           else
+            # Read the annotation through the API: this job has no local Git checkout.
+            tag_sha="$(gh api "repos/$GH_REPO/git/ref/tags/$RELEASE_TAG" \
+              --jq '.object | select(.type == "tag") | .sha')"
+            if [ -z "$tag_sha" ]; then
+              echo '::error::Release notes require an annotated Git tag.'
+              exit 1
+            fi
+            gh api "repos/$GH_REPO/git/tags/$tag_sha" --jq '.message' \
+              > "$RUNNER_TEMP/release-notes.txt"
+            if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.txt"; then
+              echo '::error::The annotated release tag has no release notes.'
+              exit 1
+            fi
             gh release create "$RELEASE_TAG" \
-              --draft --verify-tag --notes-from-tag \
+              --draft --verify-tag --notes-file "$RUNNER_TEMP/release-notes.txt" \
               --title "Kompass-Abenteuer $RELEASE_TAG"
           fi
           gh release upload "$RELEASE_TAG" dist/* --clobber

@@ -5,7 +5,7 @@ Downloads: [GitHub Releases](https://github.com/larsjochenthoms/MCKompass/releas
 
 Minecraft Java **26.3**, Fabric Loader **ab 0.19.5**, Java **25**. Die Update-Einrichtung gilt für einen Minecraft-Client mit Fabric und einen bestimmten Spielordner. Auf einem anderen PC oder in einem weiteren Spielordner muss sie einmal erneut eingerichtet werden.
 
-**Version 0.3.3** korrigiert die kurze Elternübersicht im Spiel: Die wichtigste Beobachtung zu einem Fehlermuster bleibt mit Beispiel auch nach allen 20 bearbeiteten Lernbereichen sichtbar. Die Hinweise zur vorsichtigen Einordnung bleiben erhalten; weitere Beobachtungen stehen im vollständigen HTML-Bericht.
+**Version 0.3.4** korrigiert die kurze Elternübersicht im Spiel: Die wichtigste Beobachtung zu einem Fehlermuster bleibt mit Beispiel auch nach allen 20 bearbeiteten Lernbereichen sichtbar. Die Hinweise zur vorsichtigen Einordnung bleiben erhalten; weitere Beobachtungen stehen im vollständigen HTML-Bericht.
 
 ## Einmalig für Eltern einrichten
 
@@ -71,8 +71,8 @@ GitHub Actions baut und testet Änderungen bei Pushes und Pull Requests mit Java
 4. Einen passenden annotierten Versions-Tag mit einer konkreten Beschreibung der Änderung setzen und pushen, beispielsweise:
 
    ```sh
-   git tag -a v0.3.3 -m 'Elternübersicht: Fehlermuster auch nach allen Lernbereichen anzeigen'
-   git push origin v0.3.3
+   git tag -a v0.3.4 -m 'Elternübersicht: Fehlermuster auch nach allen Lernbereichen anzeigen'
+   git push origin v0.3.4
    ```
 
 5. Den Release-Lauf unter **Actions** prüfen. Tag und `mod_version` müssen übereinstimmen. Der Text des annotierten Tags wird zur Releasebeschreibung. Erst ein erfolgreich gebautes und getestetes Release ist die Grundlage für die Versionsliste.
@@ -93,9 +93,9 @@ Der automatische Build ersetzt den Spieltest nicht. Einmal praktisch prüfen:
 - Laden einer gesicherten Welt, NPC-Gespräch, Aufgabe, Belohnung und lokaler Elternbericht.
 - Wechsel auf eine spätere freigegebene Version ohne doppelte Kompass-JAR und ohne Verlust des Lernstands.
 
-Auf macOS wurde der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf die veröffentlichte 0.3.2 mit anschließendem Neustart geprüft. Ein automatisierter Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft, ohne Bildschirmsteuerung zu verwenden. Er prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben und ihre Belohnungen, Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach dem Neuladen. Mit der veröffentlichten 0.3.2 wurde dabei der Anzeigefehler der Elternübersicht entdeckt. Der vollständige Vorabtest der für Release 0.3.3 gebauten JAR besteht, einschließlich der zuvor fehlenden Beobachtung mit Beispiel nach allen 20 Lernbereichen, Export und Fortsetzen einer offenen Aufgabe nach dem Neuladen. Alle 482 Java-Tests bestehen ebenfalls.
+Auf macOS wurde der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf die veröffentlichte 0.3.2 mit anschließendem Neustart geprüft. Ein automatisierter Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft, ohne Bildschirmsteuerung zu verwenden. Er prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben und ihre Belohnungen, Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach dem Neuladen. Mit der veröffentlichten 0.3.2 wurde dabei der Anzeigefehler der Elternübersicht entdeckt. Der vollständige Vorabtest der für Release 0.3.4 gebauten JAR besteht, einschließlich der zuvor fehlenden Beobachtung mit Beispiel nach allen 20 Lernbereichen, Export und Fortsetzen einer offenen Aufgabe nach dem Neuladen. Alle 482 Java-Tests bestehen ebenfalls.
 
-Simple Mod Sync 1.4.1 ist im Vorabtest von 0.3.3 geladen; die Synchronisation beim Start ist für diesen Lauf ausgeschaltet, da das neue Release noch nicht veröffentlicht ist. Der Lauf prüft damit das Spielverhalten der neuen JAR, keinen Updatewechsel auf 0.3.3.
+Simple Mod Sync 1.4.1 ist im Vorabtest von 0.3.4 geladen; die Synchronisation beim Start ist für diesen Lauf ausgeschaltet, da das neue Release noch nicht veröffentlicht ist. Der Lauf prüft damit das Spielverhalten der neuen JAR, keinen Updatewechsel auf 0.3.4.
 
 Die optische Lesbarkeit der Spieloberfläche, der Spieltest unter Windows und der alte Dorfmodus sind weiterhin ungeprüft. Auf dem eigenen Spiel-PC Installation, Neustart und eine Aufgabe zunächst gemeinsam in einer gesicherten Welt ausprobieren.
 
