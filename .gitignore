@@ -1,0 +1,14 @@
+.gradle/
+.tools/
+build/
+run/
+logs/
+.idea/
+*.iml
+.DS_Store
+__pycache__/
+*.py[cod]
+tmp/
+dist/
+.venv/
+*.log

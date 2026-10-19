@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "kompass4mc",
+  "version": "${version}",
+  "name": "Kompass-Abenteuer",
+  "description": "Lernreisende mit Mathematik- und Deutschaufträgen, Belohnungen und lokalen Lernnotizen für Eltern.",
+  "environment": "*",
+  "entrypoints": { "main": ["de.kompass4mc.KompassMod"] },
+  "mixins": ["kompass4mc.mixins.json"],
+  "license": "MIT",
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
