@@ -1,6 +1,6 @@
 # Kompass-Abenteuer für Minecraft Java 26.3
 
-**Version 0.5.0 (lokaler Stand):** Kürzere Gespräche, automatisch angebotene Challenges und eine interne Kartei mit fünf Fächern. Der Pool enthält 144 Challenges, darunter zwölf Baupläne mit echtem Material. Die JAR liegt nach dem Build unter `build/libs/kompass4mc-0.5.0.jar`; dieser Stand ist noch nicht als GitHub-Release veröffentlicht.
+**Version 0.5.0:** Kürzere Gespräche, automatisch angebotene Challenges und eine interne Kartei mit fünf Fächern. Der Pool enthält 144 Challenges, darunter zwölf Baupläne mit echtem Material. Die JAR liegt nach dem Build unter `build/libs/kompass4mc-0.5.0.jar`.
 
 Mila, Jaro und Lio tauchen in normalen Minecraft-Welten auf. Mila baut und gestaltet, Jaro kümmert sich um Handel und Vorräte, Lio um Nachrichten und Geschichten. Ein Dorf muss nicht angelegt werden. Jeder bietet genau eine Challenge gleichzeitig an. Die Figuren tragen eigene Skins, gehen in ihrer Umgebung spazieren und halten für Gespräche an.
 
@@ -133,7 +133,7 @@ Die installierbare Datei liegt unter `build/libs/kompass4mc-0.5.0.jar`. Die Aufg
 
 Der Stand 0.5.0 besteht **885 Java-Tests** und **zwölf Python-Tests**. Ein isolierter Minecraft-Spieltest mit Fabric Client GameTest prüft alle 144 Challenges und deren tatsächliche Geschenke, zwölf Bauformen anhand echter Weltblöcke, Bauplan-Ausgabe, unvollständige Bauten, doppelte Auszahlungen, wiederholte Karten, neue Angebote, native Eingabefelder und Knöpfe sowie Karten, Angebote und Bauplätze nach erneutem Öffnen der Welt. Der abschließende Durchlauf umfasst 1 341 Kernprüfungen sowie acht NPC- und neun Skin-/Bewegungsprüfungen. Die Produkt-JAR wird unverändert geladen; Entwicklungs-Klassen ersetzen keine Mod-Klassen.
 
-Simple Mod Sync 1.4.1 ist im Testprofil geladen; automatische Downloads sind für den noch unveröffentlichten Stand ausgeschaltet. Dies bestätigt keinen öffentlichen Updatewechsel auf 0.5.0. Frühere öffentliche Updates bis 0.4.0 wurden mit anschließendem Neustart und unveränderten kopierten Weltdateien geprüft.
+Simple Mod Sync 1.4.1 ist im Testprofil geladen; automatische Downloads sind für den Vorabtest ausgeschaltet. Dies bestätigt keinen öffentlichen Updatewechsel auf 0.5.0. Frühere öffentliche Updates bis 0.4.0 wurden mit anschließendem Neustart und unveränderten kopierten Weltdateien geprüft.
 
 Der Spieltest verwendet keine Bildschirmsteuerung und keine Desktopaufnahme. Aufnahmen entstehen ausschließlich aus dem Framebuffer der isolierten Minecraft-Testwelt. Windows, Lunar und der frühere Dorfmodus sind nicht Teil der aktuellen Prüfung. Die PDF-Anleitungen werden mit `create_guides_pdf.py` erzeugt und im A4-Layout geprüft.
 

@@ -1,6 +1,6 @@
 # GitHub Releases und Simple Mod Sync
 
-**Lokaler Entwicklungsstand 0.5.0:** 144 automatisch angebotene Challenges, feste NPC-Rollen, interne Fünf-Fach-Kartei und zwölf echte Baupläne. Dieser Stand ist noch nicht veröffentlicht; die Adresse für Simple Mod Sync bleibt unverändert. Nach der Veröffentlichung ist ein normaler Minecraft-Neustart erforderlich. Der lokale Stand besteht 885 Java-Tests, zwölf Python-Tests und den isolierten Minecraft-Spieltest mit 1 341 Kernprüfungen, allen 144 Challenges, zwölf realen Bauprüfungen sowie Client-Server-Bauplan und Survival-Blockplatzierung.
+**Version 0.5.0:** 144 automatisch angebotene Challenges, feste NPC-Rollen, interne Fünf-Fach-Kartei und zwölf echte Baupläne. Die Adresse für Simple Mod Sync bleibt unverändert. Nach einem heruntergeladenen Update ist ein vollständiger Minecraft-Neustart erforderlich. Der lokale Stand besteht 885 Java-Tests, zwölf Python-Tests und den isolierten Minecraft-Spieltest mit 1 341 Kernprüfungen, allen 144 Challenges, zwölf realen Bauprüfungen sowie Client-Server-Bauplan und Survival-Blockplatzierung.
 
 
 Quellcode: [larsjochenthoms/MCKompass](https://github.com/larsjochenthoms/MCKompass)
