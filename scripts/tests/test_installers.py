@@ -108,7 +108,8 @@ class InstallerTests(unittest.TestCase):
         return subprocess.run(args, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=45)
 
     def test_install_backs_up_all_old_managed_jars_and_keeps_other_data(self):
-        self.config_path.write_text(json.dumps({"custom": {"keep": [1, 2]}, "seen": {"other": True}}))
+        custom = {"keep": [1, 2, None, True, "text"], "empty": [], "optional": None}
+        self.config_path.write_text(json.dumps({"custom": custom, "seen": {"other": True}}))
         result = self.run_installer()
         self.assertEqual(result.returncode, 0, result.stdout)
         names = {path.name for path in (self.game / "mods").iterdir()}
@@ -116,7 +117,7 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(self.original_other.read_bytes(), self.original["mods/other-mod.jar"])
         self.assertEqual((self.game / "saves" / "Family world" / "level.dat").read_bytes(), b"world stays unchanged")
         config = json.loads(self.config_path.read_text(encoding="utf-8-sig"))
-        self.assertEqual(config["custom"], {"keep": [1, 2]})
+        self.assertEqual(config["custom"], custom)
         self.assertTrue(config["seen"]["other"])
         self.assertTrue(config["sync"]["sync_on_startup"])
         self.assertEqual(config["sync"]["schema_file_url"], MANIFEST_URL)
@@ -145,6 +146,30 @@ class InstallerTests(unittest.TestCase):
     def test_duplicate_manifest_entry_is_rejected(self):
         self.manifest["sync"][1] = self.manifest["sync"][0].copy()
         result = self.run_installer()
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(self.snapshot(), self.original)
+
+    def test_unrelated_mod_with_target_filename_is_not_overwritten(self):
+        jar(self.game / "mods" / "kompass4mc-0.3.2.jar", "unrelated-collision")
+        before = self.snapshot()
+        result = self.run_installer()
+        self.assertNotEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(self.snapshot(), before)
+
+    def test_fresh_install_without_config(self):
+        for name in ("renamed-learning-mod.jar", "kompass4mc-0.1.0.jar", "fabric-api-old.jar"):
+            (self.game / "mods" / name).unlink()
+        result = self.run_installer()
+        self.assertEqual(result.returncode, 0, result.stdout)
+        config = json.loads(self.config_path.read_text(encoding="utf-8-sig"))
+        self.assertTrue(config["sync"]["sync_on_startup"])
+        self.assertEqual(config["sync"]["schema_file_url"], MANIFEST_URL)
+        self.assertTrue((self.game / "mods" / "kompass4mc-0.3.2.jar").is_file())
+
+    @unittest.skipUnless(sys.platform == "win32", "Windows file sharing semantics")
+    def test_locked_managed_jar_blocks_mutation(self):
+        with (self.game / "mods" / "kompass4mc-0.1.0.jar").open("rb"):
+            result = self.run_installer()
         self.assertNotEqual(result.returncode, 0, result.stdout)
         self.assertEqual(self.snapshot(), self.original)
 

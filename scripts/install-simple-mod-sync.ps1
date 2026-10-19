@@ -69,12 +69,16 @@ function Assert-Unlocked([string]$Path) {
 }
 
 function ConvertTo-Hashtable($Value) {
-    if ($null -ne $Value -and $Value.PSObject.BaseObject -is [pscustomobject]) {
+    if ($null -ne $Value -and $Value.GetType().FullName -eq 'System.Management.Automation.PSCustomObject') {
         $table = @{}
         foreach ($property in $Value.PSObject.Properties) { $table[$property.Name] = ConvertTo-Hashtable $property.Value }
         return $table
     }
-    if ($Value -is [array]) { return ,@($Value | ForEach-Object { ConvertTo-Hashtable $_ }) }
+    if ($Value -is [array]) {
+        $items = New-Object object[] $Value.Count
+        for ($index = 0; $index -lt $Value.Count; $index++) { $items[$index] = ConvertTo-Hashtable $Value[$index] }
+        return ,$items
+    }
     return $Value
 }
 
@@ -129,7 +133,7 @@ try {
     $config = @{}
     if (Test-Path -LiteralPath $configPath) {
         $config = Get-Content -Raw -LiteralPath $configPath | ConvertFrom-Json
-        if ($null -eq $config -or $config.PSObject.BaseObject -isnot [pscustomobject]) { throw 'Existing Simple Mod Sync configuration is not a JSON object.' }
+        if ($null -eq $config -or $config.GetType().FullName -ne 'System.Management.Automation.PSCustomObject') { throw 'Existing Simple Mod Sync configuration is not a JSON object.' }
         $config = ConvertTo-Hashtable $config
     }
     foreach ($section in @('seen','sync')) {
@@ -156,6 +160,10 @@ try {
             }
             if ($id -in @('kompass4mc','fabric-api','simple-mod-sync')) { $oldJars += $file.FullName }
         }
+    }
+    foreach ($entry in $prepared) {
+        $destination = Join-Path $mods $entry.Name
+        if ((Test-Path -LiteralPath $destination) -and $destination -notin $oldJars) { throw "An unrelated file occupies the destination: $destination" }
     }
     Assert-GameClosed
     foreach ($path in $oldJars) { Assert-Unlocked $path }

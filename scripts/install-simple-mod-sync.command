@@ -34,8 +34,6 @@ mod_id() {
     /usr/bin/unzip -p "$1" fabric.mod.json > "$stage/mod-metadata.json" 2>/dev/null || return 1
     json_get "$stage/mod-metadata.json" id string 2>/dev/null
 }
-set_string() { /usr/bin/plutil -replace "$1" -string "$2" "$new_config"; }
-set_bool() { /usr/bin/plutil -replace "$1" -bool "$2" "$new_config"; }
 
 if [ -z "$game_dir" ]; then
     echo 'Minecraft vollständig schließen. Der Launcher darf offen bleiben.'
@@ -128,31 +126,39 @@ while [ "$i" -lt 3 ]; do
 done
 
 new_config="$stage/simplemodsync.json"
-if [ -e "$config_path" ]; then
-    /usr/bin/plutil -convert xml1 -o "$new_config" "$config_path"
-else
-    /usr/bin/plutil -create xml1 "$new_config"
-fi
-for section in seen sync; do
-    if /usr/bin/plutil -type "$section" "$new_config" >/dev/null 2>&1; then
-        [ "$(/usr/bin/plutil -type "$section" "$new_config")" = dictionary ] || die "Ungültiger Konfigurationsabschnitt: $section"
-    else
-        /usr/bin/plutil -insert "$section" -json '{}' "$new_config"
-    fi
-done
-previous_url=$(json_get "$new_config" sync.schema_file_url string 2>/dev/null || true)
-[ -n "$previous_url" ] || previous_url=$(json_get "$new_config" download_url string 2>/dev/null || true)
-if [ -n "$previous_url" ] && [ "$previous_url" != '-' ] && [ "$previous_url" != "$manifest_url" ]; then
-    die 'Simple Mod Sync verwaltet bereits ein anderes Modpaket. Ein separates Fabric-Spielverzeichnis für Kompass verwenden.'
-fi
-/usr/bin/plutil -remove download_url "$new_config" 2>/dev/null || true
-/usr/bin/plutil -remove auto_download "$new_config" 2>/dev/null || true
-set_string sync.schema_file_url "$manifest_url"
-set_bool sync.sync_on_startup true
-set_bool seen.init_screen true
-set_bool seen.allow_sync_progress_popup true
-set_bool seen.allow_needs_restart_popup true
-/usr/bin/plutil -convert json -r "$new_config"
+# Built-in JavaScript keeps all JSON values, including null (unsupported by plists).
+/usr/bin/osascript -l JavaScript - "$config_path" "$manifest_url" "$new_config" <<'JXA'
+ObjC.import('Foundation');
+function run(args) {
+    function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
+    var config = {};
+    if ($.NSFileManager.defaultManager.fileExistsAtPath(args[0])) {
+        var text = $.NSString.stringWithContentsOfFileEncodingError(args[0], $.NSUTF8StringEncoding, null);
+        if (!text) throw new Error('Simple-Mod-Sync-Konfiguration kann nicht gelesen werden.');
+        config = JSON.parse(ObjC.unwrap(text));
+    }
+    if (!object(config)) throw new Error('Simple-Mod-Sync-Konfiguration muss ein JSON-Objekt sein.');
+    ['sync', 'seen'].forEach(function(key) {
+        if (!(key in config)) config[key] = {};
+        if (!object(config[key])) throw new Error('Ungültiger Konfigurationsabschnitt: ' + key);
+    });
+    var previous = config.sync.schema_file_url || config.download_url;
+    if (previous && previous !== '-' && previous !== args[1]) {
+        throw new Error('Simple Mod Sync verwaltet ein anderes Modpaket. Separates Fabric-Spielverzeichnis für Kompass verwenden.');
+    }
+    delete config.download_url;
+    delete config.auto_download;
+    config.sync.schema_file_url = args[1];
+    config.sync.sync_on_startup = true;
+    config.seen.init_screen = true;
+    config.seen.allow_sync_progress_popup = true;
+    config.seen.allow_needs_restart_popup = true;
+    var output = $(JSON.stringify(config, null, 2) + '\n');
+    if (!output.writeToFileAtomicallyEncodingError(args[2], true, $.NSUTF8StringEncoding, null)) {
+        throw new Error('Neue Simple-Mod-Sync-Konfiguration kann nicht geschrieben werden.');
+    }
+}
+JXA
 old_jars=()
 shopt -s nullglob
 for file in "$mods"/*.jar; do
@@ -163,6 +169,16 @@ for file in "$mods"/*.jar; do
         case "$(basename "$file")" in
             kompass4mc-*.jar|fabric-api-*.jar|simplemodsync-*.jar) die "Mod-Datei kann nicht geprüft werden: $file. Bitte zunächst aus mods herausnehmen." ;;
         esac
+    fi
+done
+for filename in "${names[@]}"; do
+    destination="$mods/$filename"
+    if [ -e "$destination" ]; then
+        managed=false
+        for file in "${old_jars[@]+"${old_jars[@]}"}"; do
+            [ "$file" != "$destination" ] || managed=true
+        done
+        [ "$managed" = true ] || die "Eine fremde Datei belegt den Zielnamen: $destination"
     fi
 done
 assert_game_closed
