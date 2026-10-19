@@ -35,7 +35,7 @@ jobs:
           python-version: '3.12'
 
       - name: Test the native installer with temporary Minecraft fixtures
-        run: python -m unittest discover -s scripts/tests -p test_installers.py -v
+        run: python scripts/run_installer_tests.py
 
   build:
     runs-on: ubuntu-latest
