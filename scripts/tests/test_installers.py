@@ -71,7 +71,7 @@ class InstallerTests(unittest.TestCase):
         self.original = self.snapshot()
 
     def snapshot(self):
-        return {str(path.relative_to(self.game)): path.read_bytes()
+        return {path.relative_to(self.game).as_posix(): path.read_bytes()
                 for path in self.game.rglob("*") if path.is_file()
                 and ".kompass-backups" not in path.parts}
 
