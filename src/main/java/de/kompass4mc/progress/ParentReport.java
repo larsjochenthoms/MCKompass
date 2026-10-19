@@ -57,13 +57,22 @@ public final class ParentReport {
                     + " gelöst, " + RewardCatalog.tierDescription(difficulty) + ".");
         }
         List<PatternObservation> observations = observations(progress);
+        long archived = progress.stats.keySet().stream().filter(id -> LearningCatalog.byId(id).isEmpty()).count();
+        // Reserve the actual footer size rather than six spare lines: all 20 practiced skills
+        // otherwise hide even the first, highest-priority observation in a complete save.
+        int observationEnd = SUMMARY_LINES - 2 - (archived > 0 ? 1 : 0);
         lines.add("Beobachtungen zu Denkwegen:");
         if (observations.isEmpty()) {
             lines.add("Bisher kein hinterlegtes Fehlermuster beobachtet. Daraus folgt keine sichere Aussage über Können.");
         } else {
             for (PatternObservation observation : observations) {
-                if (lines.size() >= SUMMARY_LINES - 6) {
-                    lines.add("Weitere Beobachtungen stehen im HTML-Bericht.");
+                long subsequentlySolved = observation.evidence().stream()
+                        .filter(item -> wasAnsweredCorrectlyAfter(progress, item)).count();
+                int observationLines = subsequentlySolved > 0 ? 3 : 2;
+                if (lines.size() + observationLines > observationEnd) {
+                    String more = "Weitere Beobachtungen stehen im HTML-Bericht.";
+                    if (lines.size() < observationEnd) lines.add(more);
+                    else lines.set(lines.size() - 1, lines.getLast() + " " + more);
                     break;
                 }
                 lines.add((observation.possibleMisconception() ? "Möglicher Gesprächsanlass: " : "Einzelbeobachtung: ")
@@ -72,8 +81,6 @@ public final class ParentReport {
                 lines.add("Beispiel: " + compact(example.task().question(), 70) + " → Antwort „"
                         + compact(example.answer(), 35) + "“, erwartet „"
                         + compact(example.task().expectedAnswer(), 35) + "“.");
-                long subsequentlySolved = observation.evidence().stream()
-                        .filter(item -> wasAnsweredCorrectlyAfter(progress, item)).count();
                 if (subsequentlySolved > 0) {
                     lines.add("Frühere Fehlversuche: " + subsequentlySolved + "/"
                             + observation.evidence().size()
@@ -81,7 +88,6 @@ public final class ParentReport {
                 }
             }
         }
-        long archived = progress.stats.keySet().stream().filter(id -> LearningCatalog.byId(id).isEmpty()).count();
         if (archived > 0) {
             lines.add(archived + " frühere Aufgaben sind gespeichert; Details im HTML-Bericht.");
         }

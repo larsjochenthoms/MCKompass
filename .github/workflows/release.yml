@@ -122,7 +122,7 @@ jobs:
             fi
           else
             gh release create "$RELEASE_TAG" \
-              --draft --verify-tag --generate-notes \
+              --draft --verify-tag --notes-from-tag \
               --title "Kompass-Abenteuer $RELEASE_TAG"
           fi
           gh release upload "$RELEASE_TAG" dist/* --clobber

@@ -1,6 +1,8 @@
 # Kompass-Abenteuer für Minecraft Java 26.3
 
-**Version 0.3.2:** Mila, Jaro und Lio erscheinen als Lernreisende in normalen Minecraft-Welten. Sie erzählen von ihrer Reise, ihren Bauvorhaben oder Bestellungen und bitten um Hilfe. Ein Dorf muss dafür nicht angelegt werden. Die 48 eigenen Aufgaben verbinden Mathematik und Deutsch mit Minecraft-Situationen; vier Aufgaben werden durch einen selbst abgezählten Gegenstandsstapel in der Haupthand beantwortet. Zu den Smaragden kommen jetzt feste Sachbelohnungen hinzu, von Vorräten bis zu verzauberter Diamantausrüstung.
+**Version 0.3.3:** Die kurze Elternübersicht im Spiel zeigt die wichtigste Beobachtung zu einem Fehlermuster mit Beispiel auch dann, wenn bereits alle 20 Lernbereiche bearbeitet wurden. Die Hinweise zur vorsichtigen Einordnung bleiben erhalten; weitere Beobachtungen stehen im vollständigen HTML-Bericht.
+
+Mila, Jaro und Lio erscheinen als Lernreisende in normalen Minecraft-Welten. Sie erzählen von ihrer Reise, ihren Bauvorhaben oder Bestellungen und bitten um Hilfe. Ein Dorf muss dafür nicht angelegt werden. Die 48 eigenen Aufgaben verbinden Mathematik und Deutsch mit Minecraft-Situationen; vier Aufgaben werden durch einen selbst abgezählten Gegenstandsstapel in der Haupthand beantwortet. Zu den Smaragden kommen feste Sachbelohnungen hinzu, von Vorräten bis zu verzauberter Diamantausrüstung.
 
 ## GitHub Releases und automatische Updates
 
@@ -19,7 +21,7 @@ Diese Adresse liefert die Liste aus dem neuesten stabilen Release. Sie verweist 
 ## Installieren oder aktualisieren
 
 1. Minecraft **Java Edition 26.3** mit **Fabric Loader ab 0.19.5** verwenden. Die Mod benötigt Java 25; beim normalen Spielen übernimmt der offizielle Launcher die Java-Laufzeit.
-2. **Fabric API für 26.3** und **`kompass4mc-0.3.2.jar`** aus dem [neuesten Release](https://github.com/larsjochenthoms/MCKompass/releases/latest) (bei einem lokalen Build aus `build/libs/`) in den `mods`-Ordner der verwendeten Fabric-Installation legen. Entwickelt wird mit Fabric API `0.162.0+26.3`.
+2. **Fabric API für 26.3** und **`kompass4mc-0.3.3.jar`** aus dem [neuesten Release](https://github.com/larsjochenthoms/MCKompass/releases/latest) (bei einem lokalen Build aus `build/libs/`) in den `mods`-Ordner der verwendeten Fabric-Installation legen. Entwickelt wird mit Fabric API `0.162.0+26.3`.
 3. Zum Aktualisieren Minecraft vollständig beenden und den Weltordner sichern. Die alte Kompass-JAR, beispielsweise `kompass4mc-0.3.0.jar`, aus `mods` herausnehmen und durch die neue ersetzen. **Genau eine Kompass-JAR** in `mods` lassen; die Datei mit `-sources` ist keine installierbare Mod.
 4. Dieselbe Welt mit der Fabric-Installation öffnen. **Survival und Kreativ** werden unterstützt. Automatische Begegnungen brauchen keine aktivierten Befehle. `/kompass` zeigt die geladene Version.
 
@@ -74,6 +76,8 @@ Die Elternansicht benötigt Minecrafts **Spielleitungsrecht / Berechtigungsstufe
 
 Der Bericht steht im **Weltordner unter `kompass-berichte/<Spieler-UUID>.html`**. In einer Einzelspielerwelt ist das üblicherweise `Spielordner/saves/<Weltname>/kompass-berichte/`. Er lässt sich mit einem Browser öffnen und drucken. Jeder Export ist eine Momentaufnahme; nach weiterem Spielen erneut exportieren. Der HTML-Bericht lädt keine externen Inhalte und übermittelt keine Daten.
 
+Beim Exportknopf im Elterndialog kann Minecraft eine zusätzliche Bestätigung für den geschützten Befehl anzeigen. Den angezeigten Exportbefehl prüfen und bestätigen; die benötigten Spielleitungsrechte gelten weiterhin.
+
 Die Übersicht zeigt gelöste und begonnene Aufgaben, Anforderungen, erste Antworten, Hinweise sowie die letzten Versuche und Schwierigkeiten. Bedienfragen, etwa ein falscher Gegenstand in der Hand, werden getrennt von fachlichen Fehlantworten erfasst. Hinweise zählen nicht als Fehler. Antworten und Zeitangaben dienen dem gemeinsamen Rückblick; die benötigte Zeit wird nicht bewertet.
 
 **Mögliche Misskonzepte sind Gesprächsanlässe, keine Diagnose.** Für ausgewählte falsche Antworten sind mögliche Fehlermuster hinterlegt, etwa Verwechslung von Fläche und Umfang oder Schwierigkeiten beim Entbündeln. Ein Muster wird erst hervorgehoben, wenn passende Antworten bei **mindestens zwei verschiedenen Aufgaben** auftreten. Wiederholte Antworten zur selben Aufgabe liefern keine zusätzliche Bestätigung. Auch dann kann die Antwort durch Lesen, Raten oder Bedienung entstanden sein. Lassen Sie sich den Rechenweg oder die passende Textstelle erklären und prüfen Sie gemeinsam eine weitere Aufgabe.
@@ -100,7 +104,7 @@ Weitere ältere Befehle bleiben erhalten:
 
 ## Entwickeln und prüfen
 
-Pushes und Pull Requests werden mit GitHub Actions gebaut und getestet. Ein Tag wie `v0.3.2`, der zur Version in `gradle.properties` passt, erzeugt ein GitHub Release mit installierbarer JAR, Quellen-JAR, Prüfsummen, Versionsliste und Anleitungen. Die [Release-Anleitung](docs/github-releases.md) beschreibt den Ablauf und die erforderlichen Repository-Einstellungen.
+Pushes und Pull Requests werden mit GitHub Actions gebaut und getestet. Ein Tag wie `v0.3.3`, der zur Version in `gradle.properties` passt, erzeugt ein GitHub Release mit installierbarer JAR, Quellen-JAR, Prüfsummen, Versionsliste und Anleitungen. Die [Release-Anleitung](docs/github-releases.md) beschreibt den Ablauf und die erforderlichen Repository-Einstellungen.
 
 Benötigt werden **Java 25** und beim ersten Abruf der Abhängigkeiten eine Internetverbindung. Der Wrapper verwendet Gradle 9.6.0 und Loom 1.17.21 mit offiziellen Minecraft-Namen.
 
@@ -116,9 +120,13 @@ GRADLE_USER_HOME="$PWD/.tools/gradle-user-home" \
 ./gradlew build --no-daemon
 ```
 
-Die installierbare Datei liegt unter `build/libs/kompass4mc-0.3.2.jar`. Die Aufgaben stehen in `src/main/java/de/kompass4mc/learning/LearningCatalog.java`, die Lernnotizen in `src/main/java/de/kompass4mc/progress/` und die Begegnungen in `src/main/java/de/kompass4mc/RoamingNpcs.java`.
+Die installierbare Datei liegt unter `build/libs/kompass4mc-0.3.3.jar`. Die Aufgaben stehen in `src/main/java/de/kompass4mc/learning/LearningCatalog.java`, die Lernnotizen in `src/main/java/de/kompass4mc/progress/` und die Begegnungen in `src/main/java/de/kompass4mc/RoamingNpcs.java`.
 
-Automatisierte Tests prüfen Aufgabenantworten, Fehlermuster und die Elternberichte zusätzlich zu den bisherigen Dorfprojekten, Speicherfällen und Gesprächszuständen. Ein vollständiger interaktiver Spieltest ist weiterhin erforderlich: Begegnung in einer normalen Survival-Welt abwarten, Gespräch öffnen, Antwort und Stapel zeigen, Fehler und Hinweise versuchen, Belohnung nicht doppelt erhalten, Elternbericht prüfen und dieselbe Welt erneut laden. Die PDFs können mit `create_guides_pdf.py` neu erzeugt werden.
+Automatisierte Tests prüfen Aufgabenantworten, Fehlermuster und die Elternberichte zusätzlich zu den bisherigen Dorfprojekten, Speicherfällen und Gesprächszuständen. Der automatisierte macOS-Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft und prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben, Hinweise, Stapelantworten, Belohnungen einschließlich Reparatur, geschützte Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach erneutem Laden. Er verwendet keine Bildschirmsteuerung. Mit der veröffentlichten Version 0.3.2 wurde dabei der Anzeigefehler gefunden. Der Vorabtest der für Release 0.3.3 gebauten JAR besteht vollständig und bestätigt insbesondere den Gesprächsanlass mit Beispiel und späterer Korrektur nach allen 20 Lernbereichen. Auch alle 482 Java-Tests bestehen.
+
+Der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf 0.3.2 einschließlich Neustart wurde auf macOS geprüft. Im Vorabtest von 0.3.3 ist Simple Mod Sync 1.4.1 geladen, die Synchronisation beim Start aber ausgeschaltet, da die neue Version zu diesem Zeitpunkt noch nicht veröffentlicht ist. Dieser Lauf bestätigt daher keinen Updatewechsel auf 0.3.3.
+
+Die optische Lesbarkeit der Spieloberfläche, ein Windows-Spieltest und der alte Dorfmodus sind weiterhin ungeprüft. Die automatisierten Tests ersetzen diese Prüfungen nicht. Die PDFs können mit `create_guides_pdf.py` neu erzeugt werden.
 
 ## Quellen
 

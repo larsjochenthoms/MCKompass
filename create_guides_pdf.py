@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Printable A4 parent and child guides for Kompass-Abenteuer 0.3.2."""
+"""Printable A4 parent and child guides for Kompass-Abenteuer 0.3.3."""
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -96,7 +96,7 @@ def heading(c, title, subtitle, page, pages, child=False, color=GREEN):
     c.setLineWidth(0.7)
     c.line(M, H - 138, W - M, H - 138)
     c.line(M, 41, W - M, 41)
-    t(c, M, 27, "Version 0.3.2  |  Minecraft Java 26.3", 8, color=MUTED)
+    t(c, M, 27, "Version 0.3.3  |  Minecraft Java 26.3", 8, color=MUTED)
     c.setFont("Guide", 8)
     c.drawRightString(W - M, 27, f"{page} / {pages}")
     return H - 155
@@ -178,13 +178,13 @@ def parents(path):
     c.setTitle("Kompass-Abenteuer - Einrichten und begleiten für Eltern")
     c.setAuthor("Kompass-Abenteuer")
     y = heading(c, "Einrichten für Eltern", "Lernreisende in der normalen Minecraft-Welt - ohne Dorfaufbau.", 1, 5)
-    y = panel(c, "<b>Version 0.3.2</b><br/>Minecraft <b>Java Edition 26.3</b> · Java <b>25</b><br/>Fabric Loader <b>ab 0.19.5</b> · Fabric API <b>0.162.0+26.3</b>", y)
+    y = panel(c, "<b>Version 0.3.3</b><br/>Minecraft <b>Java Edition 26.3</b> · Java <b>25</b><br/>Fabric Loader <b>ab 0.19.5</b> · Fabric API <b>0.162.0+26.3</b>", y)
     y = step(c, 1, "Minecraft und Fabric vorbereiten", "Minecraft Java 26.3 im offiziellen Launcher einmal starten und wieder schließen. Danach den " + link(INSTALLER, "offiziellen Fabric Installer") + " verwenden: Client, Minecraft 26.3 und Loader ab 0.19.5 wählen. Unter Windows ist der EXE-Installer der einfache Einstieg.", y)
     y = step(c, 2, "Den passenden Spielordner merken", "Die Fabric-Installation im Launcher auswählen und ihren eingestellten <b>Spielordner</b> nachsehen. Ein eigener Spielordner für das Abenteuer erleichtert die Übersicht. Minecraft jetzt vollständig beenden; bei einer vorhandenen Welt den gesamten Weltordner sichern.", y)
     y = step(c, 3, "Einrichtungshilfe herunterladen", "Unter " + link(RELEASES, "GitHub Releases: neueste Version") + " die passende Datei laden: <b>install-simple-mod-sync.ps1</b> für Windows oder <b>install-simple-mod-sync.command</b> für Mac. Beide gehören zu unserem Repository <b>larsjochenthoms/MCKompass</b>.", y)
     y = panel(c, "<b>Was die Einrichtung übernimmt</b><br/>Sie installiert die Kompass-Mod, die passende Fabric API und Simple Mod Sync im gewählten Spielordner. Bisherige verwaltete JARs und die Sync-Konfiguration werden zuvor unter <b>.kompass-backups</b> im Spielordner gesichert. Das ersetzt keine Sicherung Ihrer Welt.", y, SKY, size=10.9)
     y = step(c, 4, "Die Hilfe mit dem Spielordner starten", "Auf Seite 2 stehen die Schritte für Windows und Mac. Nach der Einrichtung die Fabric-Installation starten. Nach einem durch Simple Mod Sync geladenen Update Minecraft vollständig neu starten, bevor die Welt geöffnet wird.", y)
-    para(c, "<b>Ohne automatische Updates:</b> Aus demselben Release die normale <b>kompass4mc-0.3.2.jar</b> und die " + link(API, "passende Fabric API") + " in den mods-Unterordner legen. Nur eine Kompass-JAR verwenden. Die Datei mit <b>-sources</b> ist keine installierbare Mod; JARs nicht entpacken oder einzeln starten.", M, y, CW, 10.2, color=MUTED)
+    para(c, "<b>Ohne automatische Updates:</b> Aus demselben Release die normale <b>kompass4mc-0.3.3.jar</b> und die " + link(API, "passende Fabric API") + " in den mods-Unterordner legen. Nur eine Kompass-JAR verwenden. Die Datei mit <b>-sources</b> ist keine installierbare Mod; JARs nicht entpacken oder einzeln starten.", M, y, CW, 10.2, color=MUTED)
     c.showPage()
 
     y = heading(c, "Updates über GitHub", "Einmal einrichten; später beim Start die freigegebene Version prüfen.", 2, 5)
@@ -195,7 +195,7 @@ def parents(path):
     y = para(c, "<b>Bei späteren Updates</b><br/>Vor einer neuen Version die Welt sichern. Die Einrichtung gilt nur für den gewählten Spielordner. Ein anderer PC oder eine andere Installation braucht eine eigene Einrichtung. Bei Updateproblemen Minecraft schließen und die Einrichtungshilfe erneut mit demselben Spielordner ausführen.", M, y, CW, 10.9, gap=12)
     y = para(c, "<b>Die Konfiguration liegt lokal</b><br/><font name='GuideMono' size='9.8'>config/simplemodsync.json</font> im Spielordner. Die dort eingestellte Adresse bleibt gleich und verweist auf die neueste stabile Veröffentlichung. Das Update lädt Mod-Dateien; Welten, Antworten und Elternberichte werden dadurch nicht hochgeladen.", M, y, CW, 10.9, gap=12)
     y = para(c, "Die ausführliche " + link(SETUP, "GitHub- und Update-Anleitung") + " enthält die vollständigen Befehle und den Ablauf für neue Veröffentlichungen. Für das erste Update sollte ein Erwachsener dabei sein und den Spielstart prüfen.", M, y, CW, 10.5, gap=12)
-    para(c, "Der automatische Build prüft den Code. Ein vollständiger interaktiver Test von Simple Mod Sync auf dem Spiel-PC steht noch aus. Probieren Sie Installation, Neustart und eine Aufgabe zuerst gemeinsam in einer gesicherten Welt aus.", M, y, CW, 9.8, color=MUTED)
+    para(c, "Auf macOS wurde das echte Update von 0.3.1 auf 0.3.2 mit Neustart geprüft. Automatisierte Minecraft-Tests prüfen Aufgaben und Spielabläufe ohne Bildschirmsteuerung. Installation, Neustart und eine Aufgabe auf Ihrem Spiel-PC zuerst gemeinsam in einer gesicherten Welt ausprobieren.", M, y, CW, 9.8, color=MUTED)
     c.showPage()
 
     y = heading(c, "Einfach weiterspielen", "Die Mod fügt Begegnungen in bestehende und neue Welten ein.", 3, 5)
@@ -211,9 +211,9 @@ def parents(path):
     y = heading(c, "Lernfortschritt begleiten", "Antworten, Hilfen und Denkwege gemeinsam besprechen.", 4, 5)
     y = panel(c, "<b>Elternfunktionen benötigen Spielleitungsrechte (Stufe 2).</b><br/>Im Einzelspieler dafür Befehle aktivieren. Ein Kind mit denselben Rechten kann die Übersicht ebenfalls öffnen; ein eigenes Elternkennwort gibt es nicht.", y, SKY)
     y = para(c, "<b>Übersicht im Spiel</b><br/><font name='GuideMono'>/kompass eltern</font><br/><font name='GuideMono'>/kompass eltern spieler &lt;Name&gt;</font><br/>Der Name ist der gespeicherte Minecraft-Spielername. Sichtbar sind begonnene und gelöste Aufgaben, erste Antworten, Hinweise sowie Schwierigkeiten. Hinweise sind Hilfen; Bedienfragen werden getrennt von fachlichen Fehlantworten erfasst.", M, y, CW, 11.2, gap=12)
-    y = para(c, "<b>Einen Bericht zum Lesen oder Drucken speichern</b><br/><font name='GuideMono'>/kompass eltern export</font><br/><font name='GuideMono'>/kompass eltern export &lt;Name&gt;</font><br/>Im Weltordner entsteht <b>kompass-berichte/Spieler-UUID.html</b>. Die UUID ist eine lange Spielerkennung. Die Datei mit einem Browser öffnen. Im Einzelspieler liegt der Weltordner normalerweise unter <b>Spielordner/saves/Weltname/</b>.", M, y, CW, 11.2, gap=12)
+    y = para(c, "<b>Einen Bericht zum Lesen oder Drucken speichern</b><br/><font name='GuideMono'>/kompass eltern export</font><br/><font name='GuideMono'>/kompass eltern export &lt;Name&gt;</font><br/>Im Weltordner entsteht <b>kompass-berichte/Spieler-UUID.html</b>. Die UUID ist eine lange Spielerkennung. Die Datei mit einem Browser öffnen. Im Einzelspieler liegt der Weltordner normalerweise unter <b>Spielordner/saves/Weltname/</b>. Beim Exportknopf kann Minecraft den geschützten Befehl zusätzlich bestätigen lassen: angezeigten Exportbefehl prüfen und bestätigen.", M, y, CW, 11.0, gap=10)
     y = panel(c, "<b>Mögliche Misskonzepte vorsichtig einordnen</b><br/>Bestimmte falsche Antworten können zu einem bekannten Fehlermuster passen, etwa Fläche statt Umfang. Erst passende Antworten bei <b>zwei verschiedenen Aufgaben</b> werden als möglicher Gesprächsanlass hervorgehoben. Mehrere Versuche derselben Aufgabe zählen dafür nur einmal.<br/><br/>Das ist eine <b>Hypothese, keine Diagnose</b>. Fragen Sie: „Wie hast du gerechnet?“ oder „Welche Textstelle hilft dir?“ Auch Lesen, Raten oder Bedienung können eine Antwort erklären.", y, PALE)
-    y = para(c, "Der Bericht zeigt auch, ob eine zunächst schwierige Aufgabe <b>später gelöst</b> wurde. Nicht jede falsche Antwort hat eine hinterlegte Erklärung. Für alte Dorfprojekte und Übungsfässer wird kein früherer Antwortverlauf nachträglich erzeugt. Die Übungen sind keine offiziellen Kompass-4-Testaufgaben.", M, y, CW, 10.7, gap=12)
+    y = para(c, "<b>Neu in 0.3.3:</b> Auch nach allen 20 Lernbereichen bleibt in der kurzen Spielübersicht die wichtigste Beobachtung mit Beispiel sichtbar; weitere Beobachtungen stehen im vollständigen HTML-Bericht. Dort ist auch sichtbar, ob eine zunächst schwierige Aufgabe <b>später gelöst</b> wurde. Nicht jede falsche Antwort ist erklärt. Für alte Dorfprojekte und Übungsfässer wird kein früherer Antwortverlauf erzeugt. Die Übungen sind keine offiziellen Kompass-4-Aufgaben.", M, y, CW, 10.3, gap=10)
     y = para(c, "<b>Begegnungen steuern</b><br/><font name='GuideMono'>/kompass eltern begegnungen aus</font><br/><font name='GuideMono'>/kompass eltern begegnungen an</font><br/>Damit automatische neue Begegnungen abschalten oder wieder einschalten.", M, y, CW, 10.7, gap=9)
     para(c, "Die Lernnotizen bleiben lokal im Spielstand. Ein HTML-Export ist eine Momentaufnahme und sendet keine Daten. Nach weiterem Spielen erneut exportieren. Berichte nur mit den Personen teilen, die das Kind begleiten.", M, y, CW, 9.7, color=MUTED)
     c.showPage()
@@ -221,7 +221,7 @@ def parents(path):
     y = heading(c, "Wenn etwas hakt", "Ein kurzer Check genügt oft für den nächsten Spielversuch.", 5, 5)
     for title, body in [
         ("Keine Begegnung zu sehen", "Oberwelt und freie trockene Oberfläche prüfen, etwas abwarten. Steht bereits ein Lernreisender in der Nähe, wird kein zweiter erzeugt. Als Spielleitung /kompass begegnung versuchen oder automatische Begegnungen wieder einschalten."),
-        ("Rechtsklick öffnet kein Gespräch", "Mit /kompass die Version 0.3.2 prüfen. Näher an die Figur herangehen. Nach einem Update Minecraft vollständig neu starten und doppelte Kompass-JAR-Dateien entfernen."),
+        ("Rechtsklick öffnet kein Gespräch", "Mit /kompass die Version 0.3.3 prüfen. Näher an die Figur herangehen. Nach einem Update Minecraft vollständig neu starten und doppelte Kompass-JAR-Dateien entfernen."),
         ("Stapel wird nicht erkannt", "Material und Menge im Auftrag lesen. Genau einen passenden Stapel in der unteren Reihe auswählen, sodass er in der Haupthand liegt. Danach den Lernreisenden ansprechen und den Stapel zeigen."),
         ("Elternbefehl wird nicht erlaubt", "Dieser Bereich braucht Spielleitungsrecht / Stufe 2. Im Einzelspieler sind aktivierte Befehle nötig. Zum Nachsehen den gespeicherten Minecraft-Spielernamen verwenden."),
         ("Minecraft meldet unpassende Mods", "Java Edition 26.3, Fabric Loader ab 0.19.5, Fabric API für 26.3 und die JAR von Seite 1 prüfen. Den tatsächlichen Spielordner der gewählten Fabric-Installation verwenden."),
@@ -229,7 +229,7 @@ def parents(path):
         y = para(c, f"<b>{title}</b><br/>{body}", M, y, CW, 10.9, gap=11)
     y = panel(c, "<b>Pause und Sicherung</b><br/>Normal speichern und beenden. Beim nächsten Start dieselbe Welt wählen. Für eine Sicherung bei geschlossenem Spiel den gesamten Weltordner kopieren; <b>kompass4mc.json</b> und die Bewohnerdaten gehören dazu. Eine offene Aufgabe kann bei einem nahen Lernreisenden mit <b>/kompass lernen</b> fortgesetzt werden.", y, PALE, size=10.6)
     y = para(c, "<b>Standardpfade ohne eigenen Spielordner</b><br/>Windows: <font name='GuideMono' size='9.2'>%appdata%\\.minecraft\\mods</font><br/>macOS: <font name='GuideMono' size='9.2'>~/Library/Application Support/minecraft/mods</font><br/>Linux: <font name='GuideMono' size='9.2'>~/.minecraft/mods</font>", M, y, CW, 10.2, gap=11)
-    para(c, "<b>Offizielle Hilfe</b><br/>" + link(INSTALLER, "Fabric Installer") + " · " + link(DOC_MODS, "Mods und Spielordner") + " · " + link(DOC_JAVA, "Java installieren") + "<br/>Anleitungsstand: 19.10.2026. Ein vollständiger interaktiver Spieltest steht noch aus; probieren Sie das erste Gespräch und eine Aufgabe gemeinsam aus.", M, y, CW, 9.4, color=MUTED)
+    para(c, "<b>Offizielle Hilfe</b><br/>" + link(INSTALLER, "Fabric Installer") + " · " + link(DOC_MODS, "Mods und Spielordner") + " · " + link(DOC_JAVA, "Java installieren") + "<br/>Stand: 19.10.2026. Optische Lesbarkeit, Windows-Spieltest und alter Dorfmodus sind noch ungeprüft. Das erste Gespräch und eine Aufgabe gemeinsam ausprobieren.", M, y, CW, 9.4, color=MUTED)
     c.showPage()
     c.save()
 

@@ -179,6 +179,47 @@ class ParentReportTest {
     }
 
     @Test
+    void completedFullCatalogStillShowsPossibleMisconceptionInTheBoundedGameSummary() {
+        LearningProgress progress = new LearningProgress();
+        progress.recordAnswer(task("subtract_borrow_1"), "4846", 1L, false);
+        progress.recordAnswer(task("subtract_borrow_2"), "356", 2L, false);
+        for (LearningTask task : LearningCatalog.all()) {
+            progress.recordAnswer(task, task.expectedAnswer(), 3L, false);
+        }
+
+        List<String> summary = ParentReport.summary(progress);
+
+        assertTrue(summary.size() <= 38, "Completed areas must not use the observation budget.");
+        assertTrue(summary.stream().anyMatch(line -> line.startsWith("Möglicher Gesprächsanlass:")),
+                "Parents must see a two-task observation even after practicing every area.");
+        assertTrue(summary.stream().anyMatch(line -> line.startsWith("Beispiel:")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Frühere Fehlversuche: 2/2")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Hypothese, keine Diagnose")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Wiederholte Klicks zählen nicht")));
+    }
+
+    @Test
+    void fullCatalogManyCorrectedPatternsAndArchivedNotesKeepFirstObservationAndWarnings() {
+        LearningProgress progress = new LearningProgress();
+        for (LearningTask task : LearningCatalog.all()) {
+            if (!task.patterns().isEmpty()) {
+                progress.recordAnswer(task, task.patterns().getFirst().answers().iterator().next(), 1L, false);
+            }
+            progress.recordAnswer(task, task.expectedAnswer(), 2L, false);
+        }
+        progress.stats.put("earlier_task", new LearningProgress.TaskStats());
+
+        List<String> summary = ParentReport.summary(progress);
+
+        assertTrue(summary.size() <= 38);
+        assertTrue(summary.stream().anyMatch(line -> line.startsWith("Möglicher Gesprächsanlass:")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Weitere Beobachtungen stehen im HTML-Bericht")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("frühere Aufgaben sind gespeichert")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Hypothese, keine Diagnose")));
+        assertTrue(summary.stream().anyMatch(line -> line.contains("Wiederholte Klicks zählen nicht")));
+    }
+
+    @Test
     void emptyProgressProducesAUsefulReportWithoutSuggestingMastery() {
         LearningProgress progress = new LearningProgress();
         String html = ParentReport.html(progress, "Kind");
