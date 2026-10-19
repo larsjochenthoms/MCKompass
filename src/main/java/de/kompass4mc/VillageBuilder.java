@@ -82,6 +82,7 @@ public final class VillageBuilder {
                 resident.setNoAi(true);
                 resident.setPermanentlyInvulnerable(true);
                 resident.addTag(NPC_TAG);
+                NpcAppearance.mark(resident);
                 // Include failed additions in rollback as well.
                 spawned.add(resident);
                 if (!level.addFreshEntity(resident)) {

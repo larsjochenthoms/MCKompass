@@ -1,6 +1,6 @@
 # Kompass-Abenteuer für Minecraft Java 26.3
 
-**Version 0.3.4:** Die kurze Elternübersicht im Spiel zeigt die wichtigste Beobachtung zu einem Fehlermuster mit Beispiel auch dann, wenn bereits alle 20 Lernbereiche bearbeitet wurden. Die Hinweise zur vorsichtigen Einordnung bleiben erhalten; weitere Beobachtungen stehen im vollständigen HTML-Bericht.
+**Version 0.4.0:** Mila, Jaro und Lio sehen wie Spielerfiguren aus und tragen eigene, lokal mitgelieferte Skins. Die Lernreisenden erkunden ruhig ihre unmittelbare Umgebung und bleiben stehen, sobald ein Spieler in Gesprächsnähe kommt. Vorhandene Figuren und Lernfortschritte bleiben erhalten.
 
 Mila, Jaro und Lio erscheinen als Lernreisende in normalen Minecraft-Welten. Sie erzählen von ihrer Reise, ihren Bauvorhaben oder Bestellungen und bitten um Hilfe. Ein Dorf muss dafür nicht angelegt werden. Die 48 eigenen Aufgaben verbinden Mathematik und Deutsch mit Minecraft-Situationen; vier Aufgaben werden durch einen selbst abgezählten Gegenstandsstapel in der Haupthand beantwortet. Zu den Smaragden kommen feste Sachbelohnungen hinzu, von Vorräten bis zu verzauberter Diamantausrüstung.
 
@@ -21,7 +21,7 @@ Diese Adresse liefert die Liste aus dem neuesten stabilen Release. Sie verweist 
 ## Installieren oder aktualisieren
 
 1. Minecraft **Java Edition 26.3** mit **Fabric Loader ab 0.19.5** verwenden. Die Mod benötigt Java 25; beim normalen Spielen übernimmt der offizielle Launcher die Java-Laufzeit.
-2. **Fabric API für 26.3** und **`kompass4mc-0.3.4.jar`** aus dem [neuesten Release](https://github.com/larsjochenthoms/MCKompass/releases/latest) (bei einem lokalen Build aus `build/libs/`) in den `mods`-Ordner der verwendeten Fabric-Installation legen. Entwickelt wird mit Fabric API `0.162.0+26.3`.
+2. **Fabric API für 26.3** und **`kompass4mc-0.4.0.jar`** aus dem [neuesten Release](https://github.com/larsjochenthoms/MCKompass/releases/latest) (bei einem lokalen Build aus `build/libs/`) in den `mods`-Ordner der verwendeten Fabric-Installation legen. Entwickelt wird mit Fabric API `0.162.0+26.3`.
 3. Zum Aktualisieren Minecraft vollständig beenden und den Weltordner sichern. Die alte Kompass-JAR, beispielsweise `kompass4mc-0.3.0.jar`, aus `mods` herausnehmen und durch die neue ersetzen. **Genau eine Kompass-JAR** in `mods` lassen; die Datei mit `-sources` ist keine installierbare Mod.
 4. Dieselbe Welt mit der Fabric-Installation öffnen. **Survival und Kreativ** werden unterstützt. Automatische Begegnungen brauchen keine aktivierten Befehle. `/kompass` zeigt die geladene Version.
 
@@ -35,7 +35,9 @@ Die druckbaren Anleitungen stehen unter `output/pdf/Kompass_Abenteuer_Eltern_Ein
 
 In der Oberwelt wird etwa **20 Sekunden nach dem ersten geeigneten Spielstart** ein freier Platz in der Nähe gesucht; danach etwa alle **120 Sekunden**. Eine Begegnung entsteht nur in bereits geladenem Gelände, auf einer trockenen und freien Oberfläche, ungefähr 8 bis 24 Blöcke vom Spieler entfernt. Gebäude und Landschaft werden nicht verändert. In Höhlen, unter Wasser oder in anderen Dimensionen kann deshalb keine Begegnung entstehen. Gehe dafür auf eine freie Wiese in der Oberwelt.
 
-Innerhalb von 64 Blöcken wird kein weiterer Lernreisender hinzugefügt; insgesamt sind höchstens acht geladene Lernreisende vorgesehen. Die Figuren stehen an ihrem Begegnungsort, statt einem Tagesablauf zu folgen. Nach ungefähr zehn Spielminuten können sie weiterziehen; ein laufendes Gespräch wird dabei berücksichtigt. Eine offene Aufgabe bleibt im persönlichen Fortschritt gespeichert.
+Innerhalb von 64 Blöcken wird kein weiterer Lernreisender hinzugefügt; insgesamt sind höchstens acht geladene Lernreisende vorgesehen. Mila hat kupferrotes Haar und eine grüne Reisejacke, Jaro dunkles Haar und eine ockerfarbene Werkzeugweste, Lio blondes Haar und eine blaue Jacke. Die eigenen Skins liegen in der Mod; sie brauchen keinen externen Skindienst.
+
+Die Lernreisenden laufen gelegentlich langsam auf sicheren, ebenen Wegen bis höchstens sechs Blöcke um ihren Begegnungsort. Dafür verwenden sie nur bereits geladenes Gelände. Sobald ein Spieler höchstens sechs Blöcke entfernt ist oder ein Gespräch läuft, halten sie an. Nach ungefähr zehn Spielminuten können sie weiterziehen; ein laufendes Gespräch wird dabei berücksichtigt. Eine offene Aufgabe bleibt im persönlichen Fortschritt gespeichert.
 
 - Einen Lernreisenden mit **Rechtsklick** ansprechen, den Anlass lesen und Mathematik oder Deutsch mit der gewünschten Anforderung wählen. Im Einzelspieler pausiert das Gespräch die Welt; im Mehrspieler läuft sie weiter.
 - Eine Antwort im Gespräch eingeben oder auswählen. Bei einer Stapelaufgabe das geforderte Material selbst sammeln, passend abzählen und in der **Haupthand zeigen**. Diese Gegenstände werden nicht verbraucht.
@@ -86,9 +88,9 @@ Frühere Fehlversuche bleiben im Verlauf sichtbar; der Bericht kennzeichnet, wen
 
 ## Gespeicherte Welten und optionales Dorf
 
-Fortschritt und Einstellungen werden lokal in **`kompass4mc.json` im Weltordner** gespeichert. Die Namen und das Alter der Lernreisenden werden mit den Minecraft-Figuren gespeichert. Vorhandene Welten und frühere Fortschritte bleiben verwendbar. Vor Updates eine Sicherung des gesamten Weltordners bei geschlossenem Spiel anlegen.
+Fortschritt und Einstellungen werden lokal in **`kompass4mc.json` im Weltordner** gespeichert. Die Namen und das Alter der Lernreisenden werden mit den Minecraft-Figuren gespeichert. Vorhandene Kompass-Figuren behalten beim Update ihre Kennung (UUID); der persönliche Lernfortschritt bleibt erhalten. Gewöhnliche Dorfbewohner bleiben unverändert. Vor Updates eine Sicherung des gesamten Weltordners bei geschlossenem Spiel anlegen.
 
-Der bisherige Dorfmodus bleibt über **`/kompass dorf`** beziehungsweise `/kompass abenteuer` optional verfügbar und benötigt Spielleitungsrechte. Mila prüft dort einen Gartenzaun, Jaro einen gebauten Steg und Lio eine echte Apfellieferung. Diese drei einmaligen Gemeinschaftsprojekte haben weiterhin ihren eigenen Fortschritt und eigene Regeln. Im Dorf wird Lios passende Lieferung tatsächlich übergeben; bei den neuen Lernreisenden wird der Stapel nur gezeigt.
+Der bisherige Dorfmodus bleibt über **`/kompass dorf`** beziehungsweise `/kompass abenteuer` optional verfügbar und benötigt Spielleitungsrechte. Mila prüft dort einen Gartenzaun, Jaro einen gebauten Steg und Lio eine echte Apfellieferung. Die drei tragen auch dort ihre eigenen Skins; das neue Herumlaufen gilt für die Lernreisenden außerhalb dieses Dorfmodus. Die einmaligen Gemeinschaftsprojekte haben weiterhin ihren eigenen Fortschritt und eigene Regeln. Im Dorf wird Lios passende Lieferung tatsächlich übergeben; bei den Lernreisenden wird der Stapel nur gezeigt.
 
 Weitere ältere Befehle bleiben erhalten:
 
@@ -104,7 +106,7 @@ Weitere ältere Befehle bleiben erhalten:
 
 ## Entwickeln und prüfen
 
-Pushes und Pull Requests werden mit GitHub Actions gebaut und getestet. Ein Tag wie `v0.3.4`, der zur Version in `gradle.properties` passt, erzeugt ein GitHub Release mit installierbarer JAR, Quellen-JAR, Prüfsummen, Versionsliste und Anleitungen. Die [Release-Anleitung](docs/github-releases.md) beschreibt den Ablauf und die erforderlichen Repository-Einstellungen.
+Pushes und Pull Requests werden mit GitHub Actions gebaut und getestet. Ein Tag wie `v0.4.0`, der zur Version in `gradle.properties` passt, erzeugt ein GitHub Release mit installierbarer JAR, Quellen-JAR, Prüfsummen, Versionsliste und Anleitungen. Die [Release-Anleitung](docs/github-releases.md) beschreibt den Ablauf und die erforderlichen Repository-Einstellungen.
 
 Benötigt werden **Java 25** und beim ersten Abruf der Abhängigkeiten eine Internetverbindung. Der Wrapper verwendet Gradle 9.6.0 und Loom 1.17.21 mit offiziellen Minecraft-Namen.
 
@@ -120,13 +122,15 @@ GRADLE_USER_HOME="$PWD/.tools/gradle-user-home" \
 ./gradlew build --no-daemon
 ```
 
-Die installierbare Datei liegt unter `build/libs/kompass4mc-0.3.4.jar`. Die Aufgaben stehen in `src/main/java/de/kompass4mc/learning/LearningCatalog.java`, die Lernnotizen in `src/main/java/de/kompass4mc/progress/` und die Begegnungen in `src/main/java/de/kompass4mc/RoamingNpcs.java`.
+Die installierbare Datei liegt unter `build/libs/kompass4mc-0.4.0.jar`. Die Aufgaben stehen in `src/main/java/de/kompass4mc/learning/LearningCatalog.java`, die Lernnotizen in `src/main/java/de/kompass4mc/progress/` und die Begegnungen in `src/main/java/de/kompass4mc/RoamingNpcs.java`. Die eigenen Skin-Paletten und SVG-Atlanten liegen unter `art/skins/`; `python3 tools/create_npc_skins.py` erzeugt daraus die PNGs für das Spiel.
 
-Automatisierte Tests prüfen Aufgabenantworten, Fehlermuster und die Elternberichte zusätzlich zu den bisherigen Dorfprojekten, Speicherfällen und Gesprächszuständen. Der automatisierte macOS-Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft und prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben, Hinweise, Stapelantworten, Belohnungen einschließlich Reparatur, geschützte Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach erneutem Laden. Er verwendet keine Bildschirmsteuerung. Mit der veröffentlichten Version 0.3.2 wurde dabei der Anzeigefehler gefunden. Der Vorabtest der für Release 0.3.4 gebauten JAR besteht vollständig und bestätigt insbesondere den Gesprächsanlass mit Beispiel und späterer Korrektur nach allen 20 Lernbereichen. Auch alle 482 Java-Tests bestehen.
+Automatisierte Tests prüfen Aufgabenantworten, Fehlermuster und die Elternberichte zusätzlich zu den bisherigen Dorfprojekten, Speicherfällen und Gesprächszuständen. Der automatisierte macOS-Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft und prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben, Hinweise, Stapelantworten, Belohnungen einschließlich Reparatur, geschützte Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach erneutem Laden. Er verwendet keine Bildschirmsteuerung. Mit der veröffentlichten Version 0.3.2 wurde dabei der Anzeigefehler gefunden; Version 0.3.4 bestand den vollständigen Spieltest und 482 Java-Tests. Sie zeigt den Gesprächsanlass mit Beispiel und späterer Korrektur auch nach allen 20 Lernbereichen.
 
-Der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf 0.3.2 einschließlich Neustart wurde auf macOS geprüft. Im Vorabtest von 0.3.4 ist Simple Mod Sync 1.4.1 geladen, die Synchronisation beim Start aber ausgeschaltet, da die neue Version zu diesem Zeitpunkt noch nicht veröffentlicht ist. Dieser Lauf bestätigt daher keinen Updatewechsel auf 0.3.4.
+Der vollständige Vorabtest der für 0.4.0 gebauten JAR besteht: alle 48 Aufgaben mit 919 Kernprüfungen sowie acht bisherige NPC-Prüfungen, 13 native Dialogabläufe und fünf Elternprüfungen. Neun zusätzliche Prüfungen bestätigen die drei Skins, das Neuladen der Ressourcen, die Übernahme vorhandener Figuren mit gleicher UUID nach Speichern und Laden, ruhiges Wandern über Gras und Blumen, vollständiges Anhalten in Spielernähe sowie Grenzen an Gefahren und ungeladenem Gelände. Eine Aufnahme direkt aus der isolierten Minecraft-Testwelt bestätigt die Darstellung der Spielerfiguren; es wurde keine Bildschirmsteuerung oder Desktopaufnahme verwendet. Auch 488 Java-Tests und zwölf Python-Tests bestehen.
 
-Die optische Lesbarkeit der Spieloberfläche, ein Windows-Spieltest und der alte Dorfmodus sind weiterhin ungeprüft. Die automatisierten Tests ersetzen diese Prüfungen nicht. Die PDFs können mit `create_guides_pdf.py` neu erzeugt werden.
+Der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf 0.3.2 sowie später von 0.3.2 auf 0.3.4 einschließlich Neustart wurde auf macOS geprüft. Beim zweiten Wechsel blieben die Dateien des kopierten Testspielstands unverändert. Im Vorabtest von 0.4.0 ist Simple Mod Sync 1.4.1 geladen, die Synchronisation beim Start aber ausgeschaltet. Dieser Lauf prüft daher keinen öffentlichen Updatewechsel auf 0.4.0.
+
+Die optische Lesbarkeit der übrigen Dialogoberfläche, ein Windows- oder Lunar-Spieltest und der alte Dorfmodus sind weiterhin ungeprüft. Die automatisierten Tests ersetzen diese Prüfungen nicht. Die PDFs können mit `create_guides_pdf.py` neu erzeugt werden.
 
 ## Quellen
 

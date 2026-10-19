@@ -1,0 +1,15 @@
+{
+  "name": "Jaro",
+  "role": "Handwerker mit brauner Haut, dunklem Lockenhaar und ockerfarbener Werkzeugweste",
+  "style": "builder",
+  "palette": {
+    "skin": "AA6F4C", "skin_light": "C68B61", "skin_shadow": "865339",
+    "hair": "342D2B", "hair_light": "5E4840", "hair_shadow": "241F22",
+    "eyes": "382E2B", "white": "F5EBD8", "mouth": "754539",
+    "jacket": "C29643", "jacket_light": "E1B65C", "jacket_shadow": "946C35",
+    "shirt": "E7DCC3", "accent": "4F8893", "metal": "DDD1A3",
+    "trousers": "4D555B", "trousers_light": "677279", "trousers_shadow": "333E46",
+    "shoe": "58473D", "shoe_light": "806451", "sole": "302E30",
+    "bag": "805B3D", "bag_shadow": "5E412F", "tool": "A9C4CA"
+  }
+}

@@ -5,7 +5,7 @@ Downloads: [GitHub Releases](https://github.com/larsjochenthoms/MCKompass/releas
 
 Minecraft Java **26.3**, Fabric Loader **ab 0.19.5**, Java **25**. Die Update-Einrichtung gilt für einen Minecraft-Client mit Fabric und einen bestimmten Spielordner. Auf einem anderen PC oder in einem weiteren Spielordner muss sie einmal erneut eingerichtet werden.
 
-**Version 0.3.4** korrigiert die kurze Elternübersicht im Spiel: Die wichtigste Beobachtung zu einem Fehlermuster bleibt mit Beispiel auch nach allen 20 bearbeiteten Lernbereichen sichtbar. Die Hinweise zur vorsichtigen Einordnung bleiben erhalten; weitere Beobachtungen stehen im vollständigen HTML-Bericht.
+**Version 0.4.0** gibt Mila, Jaro und Lio eigene, lokal mitgelieferte Spieler-Skins. Lernreisende laufen ruhig bis höchstens sechs Blöcke um ihren Begegnungsort auf bereits geladenen, sicheren und ebenen Wegen. Bei einem Spieler innerhalb von sechs Blöcken oder während eines Gesprächs halten sie an. Bestehende Kompass-Figuren behalten ihre UUID und ihren Lernfortschritt; gewöhnliche Dorfbewohner bleiben unverändert. Im optionalen Dorf tragen die drei ebenfalls ihre Skins, bleiben aber wie bisher an ihrem Platz.
 
 ## Einmalig für Eltern einrichten
 
@@ -51,6 +51,19 @@ https://github.com/larsjochenthoms/MCKompass/releases/latest/download/simple-mod
 
 Sie zeigt auf die Versionsliste des neuesten stabilen Releases. Die Liste enthält konkrete Downloadadressen der Kompass-Mod und ihrer Fabric API. Simple Mod Sync muss aus einer Ausgabe stammen, die GitHub als Downloadquelle erlaubt; die CurseForge-Ausgabe von Simple Mod Sync schränkt Downloadquellen ein. Die Einrichtungshilfe verwendet eine für GitHub geeignete Ausgabe.
 
+### Lunar Client oder manuelle Konfiguration
+
+Falls Lunar die SMS-Statusanzeige zeigt: Darauf klicken, **Settings** öffnen und die feste Adresse unter **Scheme file URL** eintragen. **Sync on game start** aktivieren und speichern. Ist diese Anzeige ausgeblendet, Minecraft vollständig schließen und im tatsächlich verwendeten Spielordner `config/simplemodsync.json` mit einem Texteditor öffnen. Im vorhandenen Abschnitt `sync` diese Werte setzen; weitere Einträge beibehalten:
+
+```json
+"sync": {
+  "schema_file_url": "https://github.com/larsjochenthoms/MCKompass/releases/latest/download/simple-mod-sync.json",
+  "sync_on_startup": true
+}
+```
+
+Anschließend dasselbe Fabric-Profil starten; nach einem heruntergeladenen Update erneut vollständig neu starten. Fehlt die Konfigurationsdatei, prüfen, ob Fabric und Simple Mod Sync in diesem Profil aktiviert sind. Dieser Konfigurationsweg ist beschrieben; ein eigener Lunar-Spieltest ist noch nicht erfolgt.
+
 ## Was bei späteren Updates passiert
 
 Neue freigegebene Versionen erscheinen als GitHub Release. Simple Mod Sync prüft die feste Adresse beim Start des Fabric-Spiels. Für die Nutzung einer heruntergeladenen Änderung ist ein vollständiger Minecraft-Neustart erforderlich. Vor einer neuen Version den Weltordner sichern; die Aktualisierung der JAR ersetzt keine Sicherung.
@@ -71,8 +84,8 @@ GitHub Actions baut und testet Änderungen bei Pushes und Pull Requests mit Java
 4. Einen passenden annotierten Versions-Tag mit einer konkreten Beschreibung der Änderung setzen und pushen, beispielsweise:
 
    ```sh
-   git tag -a v0.3.4 -m 'Elternübersicht: Fehlermuster auch nach allen Lernbereichen anzeigen'
-   git push origin v0.3.4
+   git tag -a v0.4.0 -m 'Eigene Skins und ruhige Spaziergänge für Lernreisende'
+   git push origin v0.4.0
    ```
 
 5. Den Release-Lauf unter **Actions** prüfen. Tag und `mod_version` müssen übereinstimmen. Der Text des annotierten Tags wird zur Releasebeschreibung. Erst ein erfolgreich gebautes und getestetes Release ist die Grundlage für die Versionsliste.
@@ -93,11 +106,13 @@ Der automatische Build ersetzt den Spieltest nicht. Einmal praktisch prüfen:
 - Laden einer gesicherten Welt, NPC-Gespräch, Aufgabe, Belohnung und lokaler Elternbericht.
 - Wechsel auf eine spätere freigegebene Version ohne doppelte Kompass-JAR und ohne Verlust des Lernstands.
 
-Auf macOS wurde der echte Simple-Mod-Sync-Wechsel von 0.3.1 auf die veröffentlichte 0.3.2 mit anschließendem Neustart geprüft. Ein automatisierter Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft, ohne Bildschirmsteuerung zu verwenden. Er prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben und ihre Belohnungen, Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach dem Neuladen. Mit der veröffentlichten 0.3.2 wurde dabei der Anzeigefehler der Elternübersicht entdeckt. Der vollständige Vorabtest der für Release 0.3.4 gebauten JAR besteht, einschließlich der zuvor fehlenden Beobachtung mit Beispiel nach allen 20 Lernbereichen, Export und Fortsetzen einer offenen Aufgabe nach dem Neuladen. Alle 482 Java-Tests bestehen ebenfalls.
+Auf macOS wurden die echten Simple-Mod-Sync-Wechsel von 0.3.1 auf die veröffentlichte 0.3.2 und von 0.3.2 auf 0.3.4 mit anschließendem Neustart geprüft. Beim zweiten Wechsel blieben die Dateien des kopierten Testspielstands unverändert. Ein automatisierter Spieltest mit Fabric Client GameTest lädt die Mod-JAR unverändert in Minecraft, ohne Bildschirmsteuerung zu verwenden. Er prüft NPC-Interaktionen, native Dialoge, alle 48 Aufgaben und ihre Belohnungen, Elternfunktionen und lokalen Export sowie Lernstand und Inventar nach dem Neuladen. Mit der veröffentlichten 0.3.2 wurde dabei der Anzeigefehler der Elternübersicht entdeckt. Version 0.3.4 besteht den vollständigen Spieltest und alle 482 Java-Tests, einschließlich der zuvor fehlenden Beobachtung mit Beispiel nach allen 20 Lernbereichen, Export und Fortsetzen einer offenen Aufgabe nach dem Neuladen.
 
-Simple Mod Sync 1.4.1 ist im Vorabtest von 0.3.4 geladen; die Synchronisation beim Start ist für diesen Lauf ausgeschaltet, da das neue Release noch nicht veröffentlicht ist. Der Lauf prüft damit das Spielverhalten der neuen JAR, keinen Updatewechsel auf 0.3.4.
+Der vollständige Vorabtest der für 0.4.0 gebauten JAR besteht ebenfalls: alle 48 Aufgaben mit 919 Kernprüfungen, acht bisherige NPC-Prüfungen, 13 native Dialogabläufe, fünf Elternprüfungen sowie neun neue Prüfungen für Skins und Bewegung. Dabei werden die drei lokalen Skins und das Neuladen der Ressourcen, bestehende Figuren mit gleicher UUID nach Speichern und Laden, Wandern über Gras und Blumen, Anhalten in Spielernähe und Grenzen an Gefahren oder ungeladenem Gelände geprüft. Eine Aufnahme aus der isolierten Minecraft-Testwelt wurde auf die korrekte Darstellung der Spielerfiguren geprüft, ohne Desktopaufnahme oder Bildschirmsteuerung. Alle 488 Java-Tests und zwölf Python-Tests bestehen.
 
-Die optische Lesbarkeit der Spieloberfläche, der Spieltest unter Windows und der alte Dorfmodus sind weiterhin ungeprüft. Auf dem eigenen Spiel-PC Installation, Neustart und eine Aufgabe zunächst gemeinsam in einer gesicherten Welt ausprobieren.
+Simple Mod Sync 1.4.1 ist dabei geladen; die Synchronisation beim Start bleibt für den Vorabtest ausgeschaltet. Dieser Lauf bestätigt das Spielverhalten der neuen JAR und keinen öffentlichen Updatewechsel auf 0.4.0.
+
+Die optische Lesbarkeit der übrigen Dialogoberfläche, der Spieltest unter Windows oder Lunar und der alte Dorfmodus sind weiterhin ungeprüft. Auf dem eigenen Spiel-PC Installation, Neustart und eine Aufgabe zunächst gemeinsam in einer gesicherten Welt ausprobieren.
 
 ## Offizielle Dokumentation
 

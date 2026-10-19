@@ -1,0 +1,15 @@
+{
+  "name": "Mila",
+  "role": "Reisende und Baumeisterin mit kupferrotem Haar und grüner Jacke",
+  "style": "traveller",
+  "palette": {
+    "skin": "E8B18B", "skin_light": "F5C7A2", "skin_shadow": "CF8C70",
+    "hair": "B9542B", "hair_light": "E28B48", "hair_shadow": "813D27",
+    "eyes": "345C48", "white": "FAF5DC", "mouth": "A76355",
+    "jacket": "49795D", "jacket_light": "6D9C75", "jacket_shadow": "345B49",
+    "shirt": "F3DFC0", "accent": "CB6D50", "metal": "E6BF59",
+    "trousers": "515E64", "trousers_light": "6D787B", "trousers_shadow": "3C454E",
+    "shoe": "80543D", "shoe_light": "AB7850", "sole": "473E38",
+    "bag": "986746", "bag_shadow": "6E4937", "tool": "B9CFCD"
+  }
+}

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -35,6 +36,7 @@ public final class LearningService {
         this.state = state;
         this.residents = residents;
         residents.busyWhen(this::busy);
+        residents.conversationWhen(this::conversationPartner);
     }
 
     public void talk(ServerPlayer player, Entity npc) {
@@ -247,6 +249,17 @@ public final class LearningService {
                     && session.npc.getUUID().equals(npc) && session.npc.isAlive()
                     && session.npc.level() == player.level() && session.npc.distanceToSqr(player) <= 1024;
         });
+    }
+
+    /** Menus and completion dialogs also keep a nearby learning traveller facing the child. */
+    public Optional<ServerPlayer> conversationPartner(UUID npc) {
+        long now = server.overworld().getGameTime();
+        return sessions.entrySet().stream().filter(entry -> entry.getValue().npc.getUUID().equals(npc))
+                .filter(entry -> now >= entry.getValue().lastAction && now - entry.getValue().lastAction < 60 * 20L)
+                .map(entry -> new java.util.AbstractMap.SimpleImmutableEntry<>(
+                        server.getPlayerList().getPlayer(entry.getKey()), entry.getValue()))
+                .filter(entry -> entry.getKey() != null && valid(entry.getKey(), entry.getValue()))
+                .map(Map.Entry::getKey).findFirst();
     }
 
     public void tick() {

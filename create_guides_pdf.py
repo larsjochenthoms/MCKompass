@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Printable A4 parent and child guides for Kompass-Abenteuer 0.3.4."""
+"""Printable A4 parent and child guides for Kompass-Abenteuer 0.4.0."""
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -96,7 +96,7 @@ def heading(c, title, subtitle, page, pages, child=False, color=GREEN):
     c.setLineWidth(0.7)
     c.line(M, H - 138, W - M, H - 138)
     c.line(M, 41, W - M, 41)
-    t(c, M, 27, "Version 0.3.4  |  Minecraft Java 26.3", 8, color=MUTED)
+    t(c, M, 27, "Version 0.4.0  |  Minecraft Java 26.3", 8, color=MUTED)
     c.setFont("Guide", 8)
     c.drawRightString(W - M, 27, f"{page} / {pages}")
     return H - 155
@@ -106,24 +106,39 @@ def travellers(c, y):
     """Small original block figures, drawn as vectors for a sharp printed guide."""
     height = 132
     width = (CW - 20) / 3
-    for index, (name, accent, pale) in enumerate([
-        ("Mila", GREEN, PALE), ("Jaro", BLUE, SKY), ("Lio", ORANGE, TAN)
+    for index, (name, accent, pale, skin, hair, eyes) in enumerate([
+        ("Mila", GREEN, PALE, "#E8B18B", "#B9542B", "#345C48"),
+        ("Jaro", ORANGE, TAN, "#AA6F4C", "#342D2B", "#382E2B"),
+        ("Lio", BLUE, SKY, "#EBC3A0", "#D5AB51", "#4B6989")
     ]):
         x = M + index * (width + 10)
         c.setFillColor(pale)
         c.roundRect(x, y - height, width, height, 9, fill=1, stroke=0)
         cx = x + width / 2
         c.setFillColor(accent)
-        c.rect(cx - 17, y - 99, 34, 40, fill=1, stroke=0)
-        c.setFillColor(colors.HexColor("#D8B891"))
-        c.rect(cx - 20, y - 66, 40, 36, fill=1, stroke=0)
-        c.setFillColor(colors.HexColor("#5D493D"))
-        c.rect(cx - 20, y - 34, 40, 10, fill=1, stroke=0)
-        c.setFillColor(INK)
-        c.rect(cx - 12, y - 48, 5, 4, fill=1, stroke=0)
-        c.rect(cx + 7, y - 48, 5, 4, fill=1, stroke=0)
-        c.setFillColor(colors.HexColor("#B18F6C"))
-        c.rect(cx - 4, y - 58, 8, 10, fill=1, stroke=0)
+        c.rect(cx - 16, y - 99, 32, 34, fill=1, stroke=0)
+        c.rect(cx - 24, y - 92, 7, 26, fill=1, stroke=0)
+        c.rect(cx + 17, y - 92, 7, 26, fill=1, stroke=0)
+        c.setFillColor(colors.HexColor("#EEE2C9"))
+        c.rect(cx - 4, y - 91, 8, 24, fill=1, stroke=0)
+        if name != "Jaro":
+            c.setFillColor(colors.HexColor("#CB6D50" if name == "Mila" else "#DBB64E"))
+            c.rect(cx - 9, y - 73, 18, 7, fill=1, stroke=0)
+        c.setFillColor(colors.HexColor(skin))
+        c.rect(cx - 18, y - 66, 36, 36, fill=1, stroke=0)
+        c.rect(cx - 24, y - 98, 7, 6, fill=1, stroke=0)
+        c.rect(cx + 17, y - 98, 7, 6, fill=1, stroke=0)
+        c.setFillColor(colors.HexColor(hair))
+        c.rect(cx - 18, y - 39, 36, 9, fill=1, stroke=0)
+        c.rect(cx - 18, y - 44, 12 if name != "Jaro" else 5, 5, fill=1, stroke=0)
+        c.setFillColor(colors.white)
+        c.rect(cx - 12, y - 49, 8, 4, fill=1, stroke=0)
+        c.rect(cx + 4, y - 49, 8, 4, fill=1, stroke=0)
+        c.setFillColor(colors.HexColor(eyes))
+        c.rect(cx - 8, y - 49, 4, 4, fill=1, stroke=0)
+        c.rect(cx + 4, y - 49, 4, 4, fill=1, stroke=0)
+        c.setFillColor(colors.HexColor("#A46C59" if name != "Jaro" else "#754539"))
+        c.rect(cx - 4, y - 59, 8, 2, fill=1, stroke=0)
         c.setFont("GuideBold", 16)
         c.setFillColor(accent)
         c.drawCentredString(cx, y - 119, name)
@@ -178,13 +193,13 @@ def parents(path):
     c.setTitle("Kompass-Abenteuer - Einrichten und begleiten für Eltern")
     c.setAuthor("Kompass-Abenteuer")
     y = heading(c, "Einrichten für Eltern", "Lernreisende in der normalen Minecraft-Welt - ohne Dorfaufbau.", 1, 5)
-    y = panel(c, "<b>Version 0.3.4</b><br/>Minecraft <b>Java Edition 26.3</b> · Java <b>25</b><br/>Fabric Loader <b>ab 0.19.5</b> · Fabric API <b>0.162.0+26.3</b>", y)
+    y = panel(c, "<b>Version 0.4.0</b><br/>Minecraft <b>Java Edition 26.3</b> · Java <b>25</b><br/>Fabric Loader <b>ab 0.19.5</b> · Fabric API <b>0.162.0+26.3</b>", y)
     y = step(c, 1, "Minecraft und Fabric vorbereiten", "Minecraft Java 26.3 im offiziellen Launcher einmal starten und wieder schließen. Danach den " + link(INSTALLER, "offiziellen Fabric Installer") + " verwenden: Client, Minecraft 26.3 und Loader ab 0.19.5 wählen. Unter Windows ist der EXE-Installer der einfache Einstieg.", y)
     y = step(c, 2, "Den passenden Spielordner merken", "Die Fabric-Installation im Launcher auswählen und ihren eingestellten <b>Spielordner</b> nachsehen. Ein eigener Spielordner für das Abenteuer erleichtert die Übersicht. Minecraft jetzt vollständig beenden; bei einer vorhandenen Welt den gesamten Weltordner sichern.", y)
     y = step(c, 3, "Einrichtungshilfe herunterladen", "Unter " + link(RELEASES, "GitHub Releases: neueste Version") + " die passende Datei laden: <b>install-simple-mod-sync.ps1</b> für Windows oder <b>install-simple-mod-sync.command</b> für Mac. Beide gehören zu unserem Repository <b>larsjochenthoms/MCKompass</b>.", y)
     y = panel(c, "<b>Was die Einrichtung übernimmt</b><br/>Sie installiert die Kompass-Mod, die passende Fabric API und Simple Mod Sync im gewählten Spielordner. Bisherige verwaltete JARs und die Sync-Konfiguration werden zuvor unter <b>.kompass-backups</b> im Spielordner gesichert. Das ersetzt keine Sicherung Ihrer Welt.", y, SKY, size=10.9)
     y = step(c, 4, "Die Hilfe mit dem Spielordner starten", "Auf Seite 2 stehen die Schritte für Windows und Mac. Nach der Einrichtung die Fabric-Installation starten. Nach einem durch Simple Mod Sync geladenen Update Minecraft vollständig neu starten, bevor die Welt geöffnet wird.", y)
-    para(c, "<b>Ohne automatische Updates:</b> Aus demselben Release die normale <b>kompass4mc-0.3.4.jar</b> und die " + link(API, "passende Fabric API") + " in den mods-Unterordner legen. Nur eine Kompass-JAR verwenden. Die Datei mit <b>-sources</b> ist keine installierbare Mod; JARs nicht entpacken oder einzeln starten.", M, y, CW, 10.2, color=MUTED)
+    para(c, "<b>Ohne automatische Updates:</b> Aus demselben Release die normale <b>kompass4mc-0.4.0.jar</b> und die " + link(API, "passende Fabric API") + " in den mods-Unterordner legen. Nur eine Kompass-JAR verwenden. Die Datei mit <b>-sources</b> ist keine installierbare Mod; JARs nicht entpacken oder einzeln starten.", M, y, CW, 10.2, color=MUTED)
     c.showPage()
 
     y = heading(c, "Updates über GitHub", "Einmal einrichten; später beim Start die freigegebene Version prüfen.", 2, 5)
@@ -193,19 +208,19 @@ def parents(path):
     y = para(c, "<b>Mac: macOS 12 oder neuer</b><br/><b>install-simple-mod-sync.command</b> doppelklicken und den Fabric-Spielordner angeben. Falls der Doppelklick nicht startet, im Terminal <font name='GuideMono'>bash</font> und ein Leerzeichen eingeben, die heruntergeladene Datei hineinziehen und Enter drücken. Danach den Spielordner eingeben.", M, y, CW, 11.2, gap=12)
     y = panel(c, "<b>Nach der Einrichtung</b><br/>Die Fabric-Installation starten. Simple Mod Sync prüft die freigegebene Liste auf GitHub. Wurde etwas aktualisiert, Minecraft <b>vollständig schließen und erneut starten</b>, bevor Sie die Welt öffnen. Im Spiel zeigt <font name='GuideMono'>/kompass</font> die geladene Version.", y, PALE, size=11.0)
     y = para(c, "<b>Bei späteren Updates</b><br/>Vor einer neuen Version die Welt sichern. Die Einrichtung gilt nur für den gewählten Spielordner. Ein anderer PC oder eine andere Installation braucht eine eigene Einrichtung. Bei Updateproblemen Minecraft schließen und die Einrichtungshilfe erneut mit demselben Spielordner ausführen.", M, y, CW, 10.9, gap=12)
-    y = para(c, "<b>Die Konfiguration liegt lokal</b><br/><font name='GuideMono' size='9.8'>config/simplemodsync.json</font> im Spielordner. Die dort eingestellte Adresse bleibt gleich und verweist auf die neueste stabile Veröffentlichung. Das Update lädt Mod-Dateien; Welten, Antworten und Elternberichte werden dadurch nicht hochgeladen.", M, y, CW, 10.9, gap=12)
+    y = para(c, "<b>Auch mit Lunar: Konfiguration im richtigen Spielordner</b><br/><font name='GuideMono' size='9.8'>config/simplemodsync.json</font> enthält die feste Updateadresse. Falls Lunar die SMS-Anzeige ausblendet, die Datei bei geschlossenem Spiel bearbeiten; die " + link(SETUP, "Update-Anleitung") + " zeigt die Einträge. Welten, Antworten und Elternberichte werden nicht hochgeladen.", M, y, CW, 10.9, gap=12)
     y = para(c, "Die ausführliche " + link(SETUP, "GitHub- und Update-Anleitung") + " enthält die vollständigen Befehle und den Ablauf für neue Veröffentlichungen. Für das erste Update sollte ein Erwachsener dabei sein und den Spielstart prüfen.", M, y, CW, 10.5, gap=12)
-    para(c, "Auf macOS wurde das echte Update von 0.3.1 auf 0.3.2 mit Neustart geprüft. Automatisierte Minecraft-Tests prüfen Aufgaben und Spielabläufe ohne Bildschirmsteuerung. Installation, Neustart und eine Aufgabe auf Ihrem Spiel-PC zuerst gemeinsam in einer gesicherten Welt ausprobieren.", M, y, CW, 9.8, color=MUTED)
+    para(c, "Der automatische Spieltest von 0.4.0 besteht; auch Skins, Bewegung und bestehende Figuren wurden geprüft. Updates mit Neustart sind bis 0.3.4 geprüft. Auf Ihrem Spiel-PC zuerst gemeinsam eine gesicherte Welt verwenden; ein eigener Lunar-Spieltest ist noch nicht erfolgt.", M, y, CW, 9.8, color=MUTED)
     c.showPage()
 
     y = heading(c, "Einfach weiterspielen", "Die Mod fügt Begegnungen in bestehende und neue Welten ein.", 3, 5)
     y = step(c, 1, "Die Welt mit Fabric starten", "Dieselbe Welt oder eine neue Einzelspielerwelt öffnen. <b>Survival und Kreativ</b> sind möglich. Für automatische Lernreisende sind keine Befehle nötig. Zum ruhigen Einstieg kann eine friedliche Schwierigkeit hilfreich sein.", y)
     y = step(c, 2, "Eine Begegnung abwarten", "Auf eine freie, trockene Oberfläche in der <b>Oberwelt</b> gehen. Nach etwa <b>20 Sekunden</b> wird erstmals ein Platz in der Nähe gesucht; weitere Versuche folgen etwa alle <b>zwei Minuten</b>. In Höhlen oder unter Wasser kann kein passender Platz entstehen.", y)
-    y = panel(c, "<b>Mila, Jaro und Lio sind auf Lernreise.</b><br/>Sie erscheinen ungefähr 8 bis 24 Blöcke entfernt. Vorhandene Blöcke werden nicht verändert. Im Umkreis von 64 Blöcken wird kein weiterer Lernreisender hinzugefügt. Die Figuren bleiben an ihrem Begegnungsort und können später weiterziehen.", y, PALE)
-    y = step(c, 3, "Gemeinsam ein Gespräch ausprobieren", "Bis auf wenige Blöcke herangehen und Rechtsklick auf die Figur. <b>Mathematik</b> oder <b>Deutsch</b> mit einer Anforderung wählen: <b>Einfach</b>, <b>Mittel</b> oder <b>Knifflig</b>. Im Einzelspieler pausiert das Gespräch die Welt; im Mehrspieler läuft sie weiter. Bei Stapelaufgaben werden die Gegenstände nur gezeigt und bleiben erhalten.", y)
+    y = panel(c, "<b>Mila, Jaro und Lio mit eigenen Spieler-Skins</b><br/>Mila trägt Grün und kupferrotes Haar, Jaro Ocker und dunkles Haar, Lio Blau und blondes Haar. Sie erscheinen 8 bis 24 Blöcke entfernt und laufen ruhig bis sechs Blöcke um ihren Begegnungsort: nur auf geladenen, sicheren, ebenen Wegen. Bei Spielern innerhalb von sechs Blöcken und im Gespräch halten sie an. Blöcke werden nicht verändert; später können sie weiterziehen.", y, PALE, size=10.8)
+    y = step(c, 3, "Gemeinsam ein Gespräch ausprobieren", "Bis auf wenige Blöcke herangehen und Rechtsklick auf die Figur. <b>Mathematik</b> oder <b>Deutsch</b> sowie <b>Einfach</b>, <b>Mittel</b> oder <b>Knifflig</b> wählen. Im Einzelspieler pausiert das Gespräch die Welt. Bei Stapelaufgaben bleiben die gezeigten Gegenstände erhalten.", y)
     y = panel(c, "<b>Smaragde und Sachbelohnungen</b><br/>Einfach: <b>2 Smaragde</b> plus Vorräte, etwa Brot oder Fackeln. Mittel: <b>4 Smaragde</b> plus Rohstoffe oder Ausrüstung. Knifflig: <b>6 Smaragde</b> plus wertvolle Dinge, etwa ein Buch mit <b>Reparatur I (Mending)</b> oder verzauberte Diamantausrüstung.<br/><br/>Das feste Paket steht vorab im Auftrag. Keine Zufallsziehung, keine Abzüge für Fehler oder Hinweise; pro Spieler und Aufgabe einmal. Beim Update keine Nachzahlung für bereits belohnte Aufgaben.", y, SKY, size=10.8)
     y = para(c, "<b>Fortsetzen und nachsehen</b><br/><font name='GuideMono'>/kompass lernen</font> setzt eine offene Aufgabe bei einem nahen Lernreisenden fort; höchstens sechs Blöcke entfernt stehen. <font name='GuideMono'>/kompass tagebuch</font> zeigt den persönlichen Fortschritt. <font name='GuideMono'>/kompass suchen</font> hilft beim Wiederfinden. Zum Prüfen der geladenen Version: <font name='GuideMono'>/kompass</font>.", M, y, CW, 10.8)
-    panel(c, "<b>Nur für die Spielleitung:</b> Mit <font name='GuideMono'>/kompass begegnung</font> lässt sich eine Begegnung versuchen. Der alte Dorfmodus bleibt optional über <font name='GuideMono'>/kompass dorf</font> erhalten. Beide Befehle benötigen aktivierte Befehle beziehungsweise Spielleitungsrechte.", y, TAN, size=10.5)
+    panel(c, "<b>Nur für die Spielleitung:</b> <font name='GuideMono'>/kompass begegnung</font> versucht eine Begegnung; <font name='GuideMono'>/kompass dorf</font> öffnet den optionalen Dorfmodus. Dort tragen die drei ebenfalls ihre Skins und bleiben an ihrem Platz. Die Befehle benötigen Spielleitungsrechte.", y, TAN, size=10.5)
     c.showPage()
 
     y = heading(c, "Lernfortschritt begleiten", "Antworten, Hilfen und Denkwege gemeinsam besprechen.", 4, 5)
@@ -213,7 +228,7 @@ def parents(path):
     y = para(c, "<b>Übersicht im Spiel</b><br/><font name='GuideMono'>/kompass eltern</font><br/><font name='GuideMono'>/kompass eltern spieler &lt;Name&gt;</font><br/>Der Name ist der gespeicherte Minecraft-Spielername. Sichtbar sind begonnene und gelöste Aufgaben, erste Antworten, Hinweise sowie Schwierigkeiten. Hinweise sind Hilfen; Bedienfragen werden getrennt von fachlichen Fehlantworten erfasst.", M, y, CW, 11.2, gap=12)
     y = para(c, "<b>Einen Bericht zum Lesen oder Drucken speichern</b><br/><font name='GuideMono'>/kompass eltern export</font><br/><font name='GuideMono'>/kompass eltern export &lt;Name&gt;</font><br/>Im Weltordner entsteht <b>kompass-berichte/Spieler-UUID.html</b>. Die UUID ist eine lange Spielerkennung. Die Datei mit einem Browser öffnen. Im Einzelspieler liegt der Weltordner normalerweise unter <b>Spielordner/saves/Weltname/</b>. Beim Exportknopf kann Minecraft den geschützten Befehl zusätzlich bestätigen lassen: angezeigten Exportbefehl prüfen und bestätigen.", M, y, CW, 11.0, gap=10)
     y = panel(c, "<b>Mögliche Misskonzepte vorsichtig einordnen</b><br/>Bestimmte falsche Antworten können zu einem bekannten Fehlermuster passen, etwa Fläche statt Umfang. Erst passende Antworten bei <b>zwei verschiedenen Aufgaben</b> werden als möglicher Gesprächsanlass hervorgehoben. Mehrere Versuche derselben Aufgabe zählen dafür nur einmal.<br/><br/>Das ist eine <b>Hypothese, keine Diagnose</b>. Fragen Sie: „Wie hast du gerechnet?“ oder „Welche Textstelle hilft dir?“ Auch Lesen, Raten oder Bedienung können eine Antwort erklären.", y, PALE)
-    y = para(c, "<b>Neu in 0.3.4:</b> Auch nach allen 20 Lernbereichen bleibt in der kurzen Spielübersicht die wichtigste Beobachtung mit Beispiel sichtbar; weitere Beobachtungen stehen im vollständigen HTML-Bericht. Dort ist auch sichtbar, ob eine zunächst schwierige Aufgabe <b>später gelöst</b> wurde. Nicht jede falsche Antwort ist erklärt. Für alte Dorfprojekte und Übungsfässer wird kein früherer Antwortverlauf erzeugt. Die Übungen sind keine offiziellen Kompass-4-Aufgaben.", M, y, CW, 10.3, gap=10)
+    y = para(c, "Auch nach allen 20 Lernbereichen bleibt in der kurzen Spielübersicht die wichtigste Beobachtung mit Beispiel sichtbar; weitere Beobachtungen stehen im vollständigen HTML-Bericht. Dort ist auch sichtbar, ob eine zunächst schwierige Aufgabe <b>später gelöst</b> wurde. Nicht jede falsche Antwort ist erklärt. Für alte Dorfprojekte und Übungsfässer wird kein früherer Antwortverlauf erzeugt. Die Übungen sind keine offiziellen Kompass-4-Aufgaben.", M, y, CW, 10.3, gap=10)
     y = para(c, "<b>Begegnungen steuern</b><br/><font name='GuideMono'>/kompass eltern begegnungen aus</font><br/><font name='GuideMono'>/kompass eltern begegnungen an</font><br/>Damit automatische neue Begegnungen abschalten oder wieder einschalten.", M, y, CW, 10.7, gap=9)
     para(c, "Die Lernnotizen bleiben lokal im Spielstand. Ein HTML-Export ist eine Momentaufnahme und sendet keine Daten. Nach weiterem Spielen erneut exportieren. Berichte nur mit den Personen teilen, die das Kind begleiten.", M, y, CW, 9.7, color=MUTED)
     c.showPage()
@@ -221,15 +236,15 @@ def parents(path):
     y = heading(c, "Wenn etwas hakt", "Ein kurzer Check genügt oft für den nächsten Spielversuch.", 5, 5)
     for title, body in [
         ("Keine Begegnung zu sehen", "Oberwelt und freie trockene Oberfläche prüfen, etwas abwarten. Steht bereits ein Lernreisender in der Nähe, wird kein zweiter erzeugt. Als Spielleitung /kompass begegnung versuchen oder automatische Begegnungen wieder einschalten."),
-        ("Rechtsklick öffnet kein Gespräch", "Mit /kompass die Version 0.3.4 prüfen. Näher an die Figur herangehen. Nach einem Update Minecraft vollständig neu starten und doppelte Kompass-JAR-Dateien entfernen."),
+        ("Rechtsklick öffnet kein Gespräch", "Mit /kompass die Version 0.4.0 prüfen. Näher an die Figur herangehen. Nach einem Update Minecraft vollständig neu starten und doppelte Kompass-JAR-Dateien entfernen."),
         ("Stapel wird nicht erkannt", "Material und Menge im Auftrag lesen. Genau einen passenden Stapel in der unteren Reihe auswählen, sodass er in der Haupthand liegt. Danach den Lernreisenden ansprechen und den Stapel zeigen."),
         ("Elternbefehl wird nicht erlaubt", "Dieser Bereich braucht Spielleitungsrecht / Stufe 2. Im Einzelspieler sind aktivierte Befehle nötig. Zum Nachsehen den gespeicherten Minecraft-Spielernamen verwenden."),
         ("Minecraft meldet unpassende Mods", "Java Edition 26.3, Fabric Loader ab 0.19.5, Fabric API für 26.3 und die JAR von Seite 1 prüfen. Den tatsächlichen Spielordner der gewählten Fabric-Installation verwenden."),
     ]:
         y = para(c, f"<b>{title}</b><br/>{body}", M, y, CW, 10.9, gap=11)
-    y = panel(c, "<b>Pause und Sicherung</b><br/>Normal speichern und beenden. Beim nächsten Start dieselbe Welt wählen. Für eine Sicherung bei geschlossenem Spiel den gesamten Weltordner kopieren; <b>kompass4mc.json</b> und die Bewohnerdaten gehören dazu. Eine offene Aufgabe kann bei einem nahen Lernreisenden mit <b>/kompass lernen</b> fortgesetzt werden.", y, PALE, size=10.6)
+    y = panel(c, "<b>Pause und Sicherung</b><br/>Normal speichern und beenden. Beim nächsten Start dieselbe Welt wählen. Bestehende Kompass-Figuren behalten UUID und Fortschritt; normale Dorfbewohner bleiben unverändert. Vor Updates den ganzen Weltordner kopieren, einschließlich <b>kompass4mc.json</b> und Bewohnerdaten. Offene Aufgaben lassen sich mit <b>/kompass lernen</b> fortsetzen.", y, PALE, size=10.6)
     y = para(c, "<b>Standardpfade ohne eigenen Spielordner</b><br/>Windows: <font name='GuideMono' size='9.2'>%appdata%\\.minecraft\\mods</font><br/>macOS: <font name='GuideMono' size='9.2'>~/Library/Application Support/minecraft/mods</font><br/>Linux: <font name='GuideMono' size='9.2'>~/.minecraft/mods</font>", M, y, CW, 10.2, gap=11)
-    para(c, "<b>Offizielle Hilfe</b><br/>" + link(INSTALLER, "Fabric Installer") + " · " + link(DOC_MODS, "Mods und Spielordner") + " · " + link(DOC_JAVA, "Java installieren") + "<br/>Stand: 19.10.2026. Optische Lesbarkeit, Windows-Spieltest und alter Dorfmodus sind noch ungeprüft. Das erste Gespräch und eine Aufgabe gemeinsam ausprobieren.", M, y, CW, 9.4, color=MUTED)
+    para(c, "<b>Offizielle Hilfe</b><br/>" + link(INSTALLER, "Fabric Installer") + " · " + link(DOC_MODS, "Mods und Spielordner") + " · " + link(DOC_JAVA, "Java installieren") + "<br/>Stand: 19.10.2026. Übrige Dialogansicht, Windows-, Lunar-Spieltest und alter Dorfmodus sind noch ungeprüft. Das erste Gespräch und eine Aufgabe gemeinsam ausprobieren.", M, y, CW, 9.4, color=MUTED)
     c.showPage()
     c.save()
 
@@ -240,9 +255,9 @@ def children(path):
     c.setAuthor("Kompass-Abenteuer")
     y = heading(c, "Dein Lernabenteuer", "Entdecke Reisende und hilf bei ihren Plänen!", 1, 4, True)
     y = travellers(c, y)
-    y = panel(c, "Mila, Jaro und Lio reisen durch die Minecraft-Welt. Sie brauchen Hilfe beim Planen, Rechnen und Lesen. Du kannst sie beim normalen Spielen treffen.", y, size=14)
+    y = panel(c, "Mila, Jaro und Lio brauchen Hilfe beim Planen, Rechnen und Lesen. Du erkennst sie an ihren eigenen Kleidern und Frisuren. Sie laufen ruhig in ihrer Nähe herum.", y, size=14)
     y = step(c, 1, "Schau dich draußen um", "Auf einer freien Wiese in der Oberwelt kann ein Lernreisender erscheinen. Das kann einen Moment dauern. Du brauchst dafür kein Dorf zu bauen.", y, True)
-    y = step(c, 2, "Beginne ein Gespräch", "Geh nah an die Figur heran. Klicke sie mit der <b>rechten Maustaste</b> an. Jetzt kannst du lesen, was auf ihrer Reise passiert.", y, True)
+    y = step(c, 2, "Beginne ein Gespräch", "Geh nah an die Figur heran: Sie bleibt für dich stehen. Klicke sie mit der <b>rechten Maustaste</b> an. Lies, was auf ihrer Reise passiert.", y, True)
     y = panel(c, "<b>Deine wichtigsten Tasten</b><br/><b>W A S D</b> gehen · <b>Maus</b> umsehen<br/><b>Leertaste</b> springen · <b>Rechtsklick</b> sprechen<br/><b>E</b> Inventar öffnen · <b>1 bis 9</b> etwas auswählen", y, SKY, size=12.8)
     para(c, "Das sind die Standardtasten am Computer. Deine Eltern können dir zeigen, welche Tasten bei dir eingestellt sind.", M, y, CW, 11, color=MUTED)
     c.showPage()

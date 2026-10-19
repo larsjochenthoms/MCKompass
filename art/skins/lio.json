@@ -1,0 +1,15 @@
+{
+  "name": "Lio",
+  "role": "Bücherfreund mit blondem Haar, blauer Jacke und roter Büchertasche",
+  "style": "reader",
+  "palette": {
+    "skin": "EBC3A0", "skin_light": "F9DABD", "skin_shadow": "D2A184",
+    "hair": "D5AB51", "hair_light": "F5D780", "hair_shadow": "AD813C",
+    "eyes": "4B6989", "white": "FAF4E7", "mouth": "B87E6A",
+    "jacket": "467FA2", "jacket_light": "70A9BF", "jacket_shadow": "315A7C",
+    "shirt": "EEE2C9", "accent": "DBB64E", "metal": "E9D38B",
+    "trousers": "536777", "trousers_light": "71889A", "trousers_shadow": "394D61",
+    "shoe": "85624A", "shoe_light": "B38B62", "sole": "E4DBC8",
+    "bag": "B36A57", "bag_shadow": "804D49", "tool": "DADABF"
+  }
+}

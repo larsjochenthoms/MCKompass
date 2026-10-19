@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.core.BlockPos;
@@ -41,8 +42,10 @@ public final class RoamingNpcs implements AutoCloseable {
     private final MinecraftServer server;
     private final Settings settings;
     private final Map<UUID, Villager> loaded = new LinkedHashMap<>();
+    private final Map<UUID, NpcWander> movement = new HashMap<>();
     private final Map<UUID, Long> nextAttempts = new HashMap<>();
     private Predicate<UUID> busy = ignored -> false;
+    private Function<UUID, Optional<ServerPlayer>> conversations = ignored -> Optional.empty();
     private boolean autoSpawn;
     private long ticks;
 
@@ -93,13 +96,16 @@ public final class RoamingNpcs implements AutoCloseable {
             RoamingNpcs current = active;
             if (current != null && level.getServer() == current.server) {
                 current.loaded.remove(entity.getUUID());
+                current.movement.remove(entity.getUUID());
             }
         });
     }
 
     private void remember(Entity entity) {
+        NpcAppearance.mark(entity);
         if (isNpc(entity) && entity instanceof Villager npc && !npc.isRemoved()) {
             loaded.put(npc.getUUID(), npc);
+            movement.computeIfAbsent(npc.getUUID(), ignored -> new NpcWander(npc));
         }
     }
 
@@ -120,6 +126,10 @@ public final class RoamingNpcs implements AutoCloseable {
         busy = predicate == null ? ignored -> false : predicate;
     }
 
+    public void conversationWhen(Function<UUID, Optional<ServerPlayer>> partner) {
+        conversations = partner == null ? ignored -> Optional.empty() : partner;
+    }
+
     public Settings settings() {
         return new Settings(autoSpawn, settings.intervalSeconds(), settings.maxLoaded(), settings.lifetimeSeconds());
     }
@@ -134,6 +144,15 @@ public final class RoamingNpcs implements AutoCloseable {
     /** Called from END_SERVER_TICK; maintenance still runs when automatic encounters are disabled. */
     public void tick() {
         ticks++;
+        for (Villager npc : new ArrayList<>(loaded.values())) {
+            if (npc.isRemoved() || !npc.isAlive()) {
+                loaded.remove(npc.getUUID());
+                movement.remove(npc.getUUID());
+            } else {
+                movement.computeIfAbsent(npc.getUUID(), ignored -> new NpcWander(npc))
+                        .tick(conversations.apply(npc.getUUID()), busy.test(npc.getUUID()));
+            }
+        }
         if (ticks % 20 != 0) {
             return;
         }
@@ -141,12 +160,14 @@ public final class RoamingNpcs implements AutoCloseable {
         for (Villager npc : new ArrayList<>(loaded.values())) {
             if (npc.isRemoved() || !npc.isAlive()) {
                 loaded.remove(npc.getUUID());
+                movement.remove(npc.getUUID());
                 continue;
             }
             long born = bornAt(npc, now);
             if (now >= born && now - born >= settings.lifetimeSeconds() * 20L && !busy.test(npc.getUUID())) {
                 npc.discard();
                 loaded.remove(npc.getUUID());
+                movement.remove(npc.getUUID());
             }
         }
         // Keep no per-player scheduler entries after players leave the server or the overworld.
@@ -249,8 +270,9 @@ public final class RoamingNpcs implements AutoCloseable {
             npc.addTag(NPC_TAG);
             npc.addTag(NAME_TAG + name);
             npc.addTag(BIRTH_TAG + server.overworld().getGameTime());
+            NpcAppearance.mark(npc);
             if (level.addFreshEntity(npc)) {
-                loaded.put(npc.getUUID(), npc);
+                remember(npc);
                 player.sendSystemMessage(Component.literal("[Kompass] " + name
                         + " ist in deiner Nähe auf Lernreise. Mit Rechtsklick kannst du ein Gespräch beginnen."));
                 return true;
@@ -304,6 +326,7 @@ public final class RoamingNpcs implements AutoCloseable {
             active = null;
         }
         loaded.clear();
+        movement.clear();
         nextAttempts.clear();
     }
 }
