@@ -258,7 +258,7 @@ public final class RoamingNpcs implements AutoCloseable {
                 continue;
             }
             String name = NAMES.get(level.getRandom().nextInt(NAMES.size()));
-            npc.setCustomName(Component.literal(name + " · auf Lernreise"));
+            npc.setCustomName(Component.literal(name));
             npc.setCustomNameVisible(true);
             npc.setPersistenceRequired();
             npc.setNoAi(true);
@@ -274,7 +274,7 @@ public final class RoamingNpcs implements AutoCloseable {
             if (level.addFreshEntity(npc)) {
                 remember(npc);
                 player.sendSystemMessage(Component.literal("[Kompass] " + name
-                        + " ist in deiner Nähe auf Lernreise. Mit Rechtsklick kannst du ein Gespräch beginnen."));
+                        + " ist in deiner Nähe unterwegs."));
                 return true;
             }
             npc.discard();

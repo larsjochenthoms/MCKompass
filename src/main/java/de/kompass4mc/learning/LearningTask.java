@@ -61,6 +61,11 @@ public record LearningTask(
             } catch (NumberFormatException exception) {
                 throw new IllegalArgumentException("Die gezeigte Menge muss in einen Stapel passen.", exception);
             }
+        } else if (interaction == Interaction.BUILD) {
+            if (!itemId.matches("[a-z0-9_.-]+:[a-z0-9_/.-]+") || !choices.isEmpty()
+                    || !expectedAnswer.equals("gebaut")) {
+                throw new IllegalArgumentException("Bau-Challenges brauchen Material und eine Weltprüfung.");
+            }
         } else if (!itemId.isEmpty()) {
             throw new IllegalArgumentException("Nur Zeige-Aufträge haben einen Prüfgegenstand.");
         }

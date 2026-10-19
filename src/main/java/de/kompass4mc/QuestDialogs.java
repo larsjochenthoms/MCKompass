@@ -15,13 +15,11 @@ public final class QuestDialogs {
         dialog.addProperty("title", quest.title());
         dialog.addProperty("pause", false);
         JsonArray body = new JsonArray();
-        body.add(message(quest.subject() == Subject.MATH ? "Mathematik" : "Deutsch"));
         body.add(message(quest.story()));
         body.add(message(quest.question()));
         if (feedback != null && !feedback.isBlank()) {
             body.add(message(feedback));
         }
-        body.add(message("Ohne Zeitlimit. Du kannst schließen und später mit /kompass weiter fortsetzen."));
         dialog.add("body", body);
         dialog.addProperty("columns", 1);
         JsonArray actions = new JsonArray();
@@ -30,12 +28,12 @@ public final class QuestDialogs {
             JsonObject input = new JsonObject();
             input.addProperty("type", "minecraft:text");
             input.addProperty("key", "answer");
-            input.addProperty("label", "Deine Antwort");
+            input.addProperty("label", "Dein Vorschlag");
             input.addProperty("max_length", 128);
             input.addProperty("width", 300);
             inputs.add(input);
             dialog.add("inputs", inputs);
-            actions.add(button("Antwort prüfen", "kompass antwort " + quest.id() + " $(answer)", true));
+            actions.add(button("Sagen", "kompass antwort " + quest.id() + " $(answer)", true));
         } else {
             for (int index = 0; index < quest.choices().size(); index++) {
                 String letter = Character.toString((char) ('A' + index));
@@ -45,7 +43,7 @@ public final class QuestDialogs {
                 actions.add(action);
             }
         }
-        actions.add(button("Hinweis", "kompass hinweis", false));
+        actions.add(button("Ein Tipp?", "kompass hinweis", false));
         dialog.add("actions", actions);
         JsonObject exit = new JsonObject();
         exit.addProperty("label", "Später weiter");

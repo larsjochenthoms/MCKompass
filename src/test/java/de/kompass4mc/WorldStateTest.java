@@ -28,6 +28,63 @@ class WorldStateTest {
     Path directory;
 
     @Test
+    void cardsAndThreeIndependentOffersSurviveReloadIncludingIssuedBlueprint() throws IOException {
+        Path path = directory.resolve("cards.json");
+        WorldState state = new WorldState(path);
+        var progress = state.learningProgress(PLAYER_ONE, "Kind");
+        for (var role : de.kompass4mc.learning.ChallengeRole.values()) {
+            var task = LearningCatalog.all().stream().filter(t -> t.npcName().equals(role.residentName()))
+                    .findFirst().orElseThrow();
+            var offer = new de.kompass4mc.progress.ChallengeOffer(task.id(), 5000);
+            progress.offers.put(role.residentName(), offer);
+            progress.recordChallengeAnswer(task, task.expectedAnswer(), 1000, false);
+        }
+        var build = new de.kompass4mc.progress.ChallengeOffer("build_towers_0", 6000);
+        build.materialsIssued = true; build.hintUsed = true;
+        build.site = new de.kompass4mc.progress.ChallengeOffer.Site("minecraft:overworld", -25, 65, 42);
+        progress.offers.put("Mila", build);
+        state.save();
+        var loaded = new WorldState(path).learningProgress(PLAYER_ONE, "Kind");
+        assertEquals(3, loaded.offers.size());
+        assertEquals(3, loaded.cards.size());
+        assertEquals(build.ticket, loaded.offers.get("Mila").ticket);
+        assertTrue(loaded.offers.get("Mila").materialsIssued);
+        assertTrue(loaded.offers.get("Mila").hintUsed);
+        assertEquals(build.site, loaded.offers.get("Mila").site);
+        loaded.cards.values().forEach(c -> assertEquals(2, c.box));
+        assertTrue(new WorldState(path).learningProgress(PLAYER_TWO, "Anderes Kind").offers.isEmpty());
+    }
+
+    @Test
+    void preCardProgressKeepsItsHistoryAndStartsWithEmptyDeckAndOffers() throws IOException {
+        Path path = directory.resolve("old-progress.json");
+        Files.writeString(path, "{\"version\":1,\"players\":{},\"hidingPlaces\":{},\"learning\":{\"p\":{\"playerName\":\"Kind\","
+                + "\"completed\":[\"subtract_store\"],\"rewarded\":[\"subtract_store\"],"
+                + "\"activeTaskId\":\"grammar_infinitive_1\"}}}");
+        var loaded = new WorldState(path).learningProgress("p", "Kind");
+        assertTrue(loaded.completed.contains("subtract_store"));
+        assertTrue(loaded.rewarded.contains("subtract_store"));
+        assertEquals("grammar_infinitive_1", loaded.activeTaskId);
+        assertTrue(loaded.cards.isEmpty()); assertTrue(loaded.offers.isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "\"cards\":null", "\"cards\":{\"subtract_store\":{}}",
+        "\"cards\":{\"subtract_store\":{\"box\":6,\"reviews\":1,\"lastReviewMillis\":2,\"dueMillis\":3}}",
+        "\"cards\":{\"subtract_store\":{\"box\":2,\"reviews\":1,\"lastReviewMillis\":4,\"dueMillis\":3}}",
+        "\"offers\":null", "\"offers\":{\"Jaro\":{}}",
+        "\"offers\":{\"Lio\":{\"ticket\":\"a\",\"taskId\":\"subtract_store\",\"restockAt\":1,\"completed\":false,\"rewarded\":false,\"materialsIssued\":false}}"
+    })
+    void malformedCardsAndOffersNeverOverwriteOriginal(String fragment) throws IOException {
+        Path path = directory.resolve("invalid-card.json");
+        String original = "{\"version\":1,\"players\":{},\"hidingPlaces\":{},\"learning\":{\"p\":{" + fragment + "}}}";
+        Files.writeString(path, original);
+        assertThrows(IOException.class, () -> new WorldState(path));
+        assertEquals(original, Files.readString(path));
+    }
+
+    @Test
     void discoveriesCompletionsActiveQuestAndHidingPlacesSurviveReload() throws IOException {
         Path path = directory.resolve("world/data/kompass4mc.json");
         WorldState state = new WorldState(path);

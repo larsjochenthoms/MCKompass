@@ -13,7 +13,7 @@ import java.util.Objects;
  * Es gibt keine Zufallsziehung. Erneutes Üben derselben Aufgabe erzeugt kein neues Paket.
  */
 public final class RewardCatalog {
-    private static final List<RewardSpec> ALL = List.of(
+    private static final List<RewardSpec> BASE = List.of(
             reward("subtract_store", "16 Fackeln", item("torch", 16)),
             reward("subtract_borrow_1", "Verzaubertes Buch: Reparatur I",
                     enchanted("enchanted_book", enchantment("mending", 1))),
@@ -73,23 +73,23 @@ public final class RewardCatalog {
     );
 
     private static final Map<String, RewardSpec> BY_TASK;
+    private static final List<RewardSpec> ALL;
 
     static {
         Map<String, RewardSpec> indexed = new LinkedHashMap<>();
-        for (RewardSpec reward : ALL) {
+        for (RewardSpec reward : BASE) {
             if (indexed.putIfAbsent(reward.id(), reward) != null) {
                 throw new IllegalStateException("Doppelte Aufgabenbelohnung: " + reward.id());
             }
         }
         for (LearningTask task : LearningCatalog.all()) {
-            if (!indexed.containsKey(task.id())) {
-                throw new IllegalStateException("Fehlende Aufgabenbelohnung: " + task.id());
-            }
+            indexed.computeIfAbsent(task.id(), ignored -> generated(task));
         }
         if (indexed.size() != LearningCatalog.all().size()) {
             throw new IllegalStateException("Belohnungskatalog enthält unbekannte Aufgaben.");
         }
         BY_TASK = Map.copyOf(indexed);
+        ALL = List.copyOf(indexed.values());
     }
 
     private RewardCatalog() {
@@ -124,6 +124,50 @@ public final class RewardCatalog {
                 .orElseThrow(() -> new IllegalStateException("Unbekannte Belohnungsaufgabe: " + taskId));
         return new RewardSpec(taskId, task.difficulty().emeralds() + " Smaragde + " + bonusLabel,
                 List.of(item("emerald", task.difficulty().emeralds()), bonus));
+    }
+
+    private static RewardSpec generated(LearningTask task) {
+        int variant = Math.floorMod(task.id().hashCode(), 5);
+        RewardItem bonus = switch (task.difficulty()) {
+            case EASY -> switch (variant) {
+                case 0 -> item("bread", 4); case 1 -> item("torch", 12); case 2 -> item("oak_log", 8);
+                case 3 -> item("carrot", 8); default -> item("arrow", 12);
+            };
+            case MEDIUM -> switch (variant) {
+                case 0 -> item("iron_ingot", 6); case 1 -> item("lapis_lazuli", 16); case 2 -> item("book", 4);
+                case 3 -> enchanted("iron_pickaxe", enchantment("efficiency", 2)); default -> item("redstone", 12);
+            };
+            case HARD -> switch (variant) {
+                case 0 -> enchanted("enchanted_book", enchantment("mending", 1));
+                case 1 -> enchanted("diamond_pickaxe", enchantment("efficiency", 3));
+                case 2 -> enchanted("bow", enchantment("power", 3));
+                case 3 -> enchanted("diamond_boots", enchantment("feather_falling", 3));
+                default -> enchanted("diamond_pickaxe", enchantment("unbreaking", 3));
+            };
+        };
+        String name = switch (bonus.itemId()) {
+            case "minecraft:bread" -> "Brot"; case "minecraft:torch" -> "Fackeln";
+            case "minecraft:oak_log" -> "Eichenstämme"; case "minecraft:carrot" -> "Karotten";
+            case "minecraft:arrow" -> "Pfeile"; case "minecraft:iron_ingot" -> "Eisenbarren";
+            case "minecraft:lapis_lazuli" -> "Lapislazuli"; case "minecraft:book" -> "Bücher";
+            case "minecraft:redstone" -> "Redstone"; case "minecraft:diamond" -> "Diamanten";
+            case "minecraft:enchanted_book" -> "Reparatur-Buch";
+            case "minecraft:iron_pickaxe" -> "verzauberte Eisenspitzhacke";
+            case "minecraft:diamond_pickaxe" -> "verzauberte Diamantspitzhacke";
+            case "minecraft:diamond_boots" -> "verzauberte Diamantstiefel";
+            default -> "verzauberter Bogen";
+        };
+        String enchantedLabel = bonus.enchantments().stream().map(e -> switch (e.enchantmentId()) {
+            case "minecraft:mending" -> "Reparatur I";
+            case "minecraft:efficiency" -> "Effizienz " + (e.level() == 2 ? "II" : "III");
+            case "minecraft:unbreaking" -> "Haltbarkeit III";
+            case "minecraft:power" -> "Stärke III";
+            case "minecraft:feather_falling" -> "Federfall III";
+            default -> throw new IllegalArgumentException(e.enchantmentId());
+        }).collect(java.util.stream.Collectors.joining(", "));
+        return new RewardSpec(task.id(), task.rewardEmeralds() + " Smaragde + " + bonus.count() + " " + name
+                + (enchantedLabel.isEmpty() ? "" : " (" + enchantedLabel + ")"),
+                List.of(item("emerald", task.rewardEmeralds()), bonus));
     }
 
     private static RewardItem item(String name, int count) {

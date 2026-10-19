@@ -40,7 +40,7 @@ public final class ParentReport {
         lines.add("Fachliche Fehlantworten: " + totals.incorrect + "; davon ohne hinterlegtes Muster: "
                 + unmatchedAnswers(progress) + " (letzte " + progress.attempts.size() + " Ereignisse).");
         lines.add("Bedienfragen separat: " + totals.procedural + ". Hinweise sind keine Fehler.");
-        lines.add("Nur neue Lernreisende: letzte 500 Ereignisse und Aufgaben-Gesamtzahlen; alte Dorfaufträge ohne rückwirkende Notizen.");
+        lines.add(cardSummary(progress));
         lines.add("Übungsbereiche:");
         for (Skill skill : Skill.values()) {
             Totals group = totals(progress, task -> task.skill() == skill);
@@ -149,7 +149,7 @@ public final class ParentReport {
                 .append(" Aufgaben gelöst</strong> · ").append(totals.answers).append(" Antworten · ")
                 .append(totals.incorrect).append(" fachliche Fehlantworten · ").append(totals.hints)
                 .append(" geöffnete Hinweise · ").append(totals.procedural).append(" Bedienhinweise.</p>");
-        html.append("<p><strong>Datenumfang:</strong> Erfasst werden nur die neuen Aufträge der Lernreisenden. "
+        html.append("<p><strong>Datenumfang:</strong> Erfasst werden die persönlichen Challenges von Mila, Jaro und Lio. "
                 + "Für frühere Dorfaufträge oder Übungsfässer entstehen keine rückwirkenden Lernnotizen. "
                 + "Die letzten 500 Ereignisse und Aufgaben-Gesamtzahlen werden im Spielstand gespeichert; "
                 + "dieser Bericht zeigt die letzten 50 Ereignisse.</p>");
@@ -157,6 +157,7 @@ public final class ParentReport {
                 .append("; davon ohne zuvor geöffneten Hinweis: ").append(totals.firstWithoutHint)
                 .append(". Hinweise sind Hilfen und werden nicht als Fehler gezählt. "
                         + "Es gibt keine Zeitwertung und keine Abzüge von Belohnungen nach Fehlversuchen.</p>");
+        appendCards(html, progress);
         html.append("<h2>Übungsbereiche</h2><p>„Erster Versuch richtig“ und „davon ohne Hinweis“ sind verschiedene Angaben. "
                 + "Noch nicht begonnene Aufgaben sagen nichts über das Können des Kindes aus.</p>");
         startProgressTable(html, "Fortschritt nach Übungsbereich");
@@ -166,7 +167,7 @@ public final class ParentReport {
         }
         html.append("</tbody></table></div><h2>Anforderung und Belohnung</h2>");
         html.append("<p>Die Anforderung gehört zur Aufgabe und stuft das Kind nicht ein. Jede Aufgabe wird pro Kind "
-                + "einmal belohnt; Hinweise oder mehrere Versuche verringern die Belohnung nicht. "
+                + "je neuem Angebot einmal belohnt; spätere Wiederholungen können erneut belohnt werden. Hinweise oder mehrere Versuche verringern die Belohnung nicht. "
                 + "Zusätzlich zu den Smaragden hat jede Aufgabe ein festes Geschenk, das vorab im Gespräch steht. "
                 + "Die aktuellen Geschenkpakete gelten für neu belohnte Aufgaben ab Version 0.3.1. "
                 + "Bereits zuvor belohnte Aufgaben erhalten keine nachträgliche Auszahlung.</p>");
@@ -223,6 +224,44 @@ public final class ParentReport {
                 + "Der Bericht lädt keine externen Ressourcen und sendet keine Daten. "
                 + "Zeitangaben: Europe/Berlin; Zeiten werden nicht bewertet.</p></body></html>");
         return html.toString();
+    }
+
+    private static String cardSummary(LearningProgress progress) {
+        StringBuilder text = new StringBuilder("Kartei: ");
+        for (int box = 1; box <= 5; box++) {
+            int current = box;
+            if (box > 1) text.append(" · ");
+            text.append("Fach ").append(box).append(": ")
+                    .append(progress.cards.values().stream().filter(c -> c.box == current).count());
+        }
+        return text.toString();
+    }
+
+    private static void appendCards(StringBuilder html, LearningProgress progress) {
+        html.append("<h2>Interne Lernkartei</h2><p>").append(cardSummary(progress))
+                .append("</p><p>Richtig: ein Fach höher, höchstens Fach 5. Falsch: zurück in Fach 1. "
+                        + "Nicht gezeigtes Baumaterial und noch unvollständige Bauten verändern kein Fach. "
+                        + "Hinweise verändern das Fach ebenfalls nicht. Mindestabstände: Fach 1 eine Minute, "
+                        + "Fach 2 fünf Minuten, Fach 3 dreißig Minuten, Fach 4 zwei Stunden, Fach 5 ein Tag. "
+                        + "Fällige, bereits bearbeitete Karten werden bevorzugt; in niedrigen Fächern häufiger. "
+                        + "Diese Einordnung ist kein Nachweis für sicheres Beherrschen. Ältere Antworten bleiben "
+                        + "im Verlauf, werden aber nicht rückwirkend in Fächer umgerechnet.</p>");
+        html.append("<div class=\"scroll\"><table><thead><tr><th>Challenge</th><th>NPC</th>"
+                + "<th>Fach</th><th>Antworten seit Einführung der Kartei</th><th>Frühestens wieder fällig</th></tr></thead><tbody>");
+        progress.cards.forEach((id, card) -> {
+            var task = LearningCatalog.byId(id).orElse(null);
+            html.append("<tr><td>").append(escape(task == null ? id : task.title())).append("</td><td>")
+                    .append(escape(task == null ? "—" : task.npcName())).append("</td><td>").append(card.box)
+                    .append("</td><td>").append(card.reviews).append("</td><td>")
+                    .append(escape(date(card.dueMillis))).append("</td></tr>");
+        });
+        html.append("</tbody></table></div><p>Aktuelle Angebote: ");
+        progress.offers.forEach((name, offer) -> {
+            var task = LearningCatalog.byId(offer.taskId).orElse(null);
+            html.append(escape(name)).append(": ").append(escape(task == null ? offer.taskId : task.title()))
+                    .append(offer.completed ? " (abgeschlossen)" : " (offen)").append("; ");
+        });
+        html.append("</p>");
     }
 
     private static void appendTaskDetails(StringBuilder html, LearningProgress progress) {

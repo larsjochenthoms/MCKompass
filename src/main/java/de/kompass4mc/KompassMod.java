@@ -102,6 +102,9 @@ public final class KompassMod implements ModInitializer {
                     || state == null) {
                 return InteractionResult.PASS;
             }
+            if (learning != null && learning.useBlueprint(learner, learner.getMainHandItem(), hit)) {
+                return InteractionResult.SUCCESS;
+            }
             WorldState.HidingPlace place = state.hidingPlaces().get(key(learner, hit.getBlockPos()));
             if (place == null) {
                 return InteractionResult.PASS;
@@ -150,7 +153,7 @@ public final class KompassMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(Commands.literal("kompass")
                     .executes(context -> help(context.getSource()))
-                    .then(Commands.literal("lernen")
+                    .then(Commands.literal("challenge")
                             .executes(context -> learning.resume(context.getSource().getPlayerOrException(), false))
                             .then(Commands.argument("gespraech", StringArgumentType.word())
                                     .then(Commands.argument("aktion", StringArgumentType.word())
@@ -177,7 +180,7 @@ public final class KompassMod implements ModInitializer {
                                                     StringArgumentType.getString(context, "quest"),
                                                     StringArgumentType.getString(context, "antwort"))))))
                     .then(Commands.literal("suchen").executes(context -> search(context.getSource().getPlayerOrException()))
-                            .then(Commands.literal("uebungen").executes(context -> searchExercises(context.getSource().getPlayerOrException()))))
+                            .then(Commands.literal("schaetze").executes(context -> searchExercises(context.getSource().getPlayerOrException()))))
                     .then(Commands.literal("abenteuer").requires(KompassMod::gameMaster)
                             .executes(context -> village.create(context.getSource().getPlayerOrException())))
                     .then(Commands.literal("dorf").requires(KompassMod::gameMaster)
@@ -188,7 +191,7 @@ public final class KompassMod implements ModInitializer {
                                             .executes(context -> village.action(context.getSource().getPlayerOrException(),
                                                     StringArgumentType.getString(context, "auftrag"),
                                                     StringArgumentType.getString(context, "aktion"))))))
-                    .then(Commands.literal("uebungsrunde").requires(KompassMod::gameMaster)
+                    .then(Commands.literal("schatzrunde").requires(KompassMod::gameMaster)
                             .executes(context -> adventure(context.getSource().getPlayerOrException())))
                     .then(Commands.literal("versteck").requires(KompassMod::gameMaster)
                             .then(Commands.argument("quest", StringArgumentType.word())
@@ -206,16 +209,16 @@ public final class KompassMod implements ModInitializer {
     }
 
     private int help(CommandSourceStack source) {
-        source.sendSuccess(() -> Component.literal("Kompass-Abenteuer " + version() + ": Mila, Jaro und Lio erscheinen auf Lernreise in deiner Oberwelt. "
-                + "Sprich sie mit Rechtsklick an.\n/kompass lernen - Gespräch in der Nähe fortsetzen\n"
-                + "/kompass suchen - einen erschienenen Lernreisenden finden\n"
-                + "/kompass tagebuch - deine Aufträge und Fortschritte"), false);
+        source.sendSuccess(() -> Component.literal("Kompass-Abenteuer " + version() + ": Mila, Jaro und Lio sind in deiner Oberwelt unterwegs. "
+                + "Sprich sie mit Rechtsklick an.\n/kompass challenge - Gespräch in der Nähe fortsetzen\n"
+                + "/kompass suchen - Mila, Jaro oder Lio finden\n"
+                + "/kompass tagebuch - deine Geschichten"), false);
         if (gameMaster(source)) {
-            source.sendSuccess(() -> Component.literal("Eltern: /kompass eltern zeigt Lernnotizen; /kompass eltern export erstellt einen lokalen Bericht.\n"
+            source.sendSuccess(() -> Component.literal("Eltern: /kompass eltern zeigt die geschützte Übersicht; /kompass eltern export erstellt einen lokalen Bericht.\n"
                     + "/kompass begegnung versucht sofort eine Begegnung auf geeignetem Gelände.\n"
                     + "/kompass eltern begegnungen an|aus steuert automatische Begegnungen.\n"
                     + "/kompass dorf legt optional den früheren Dorfplatz mit drei Bewohnern an.\n"
-                    + "/kompass uebungsrunde legt die zusätzliche Runde mit zwölf Übungsfässern an.\n"
+                    + "/kompass schatzrunde legt die zusätzliche Runde mit zwölf Schatzfässern an.\n"
                     + "/kompass versteck <quest> <x> <y> <z> bindet ein vorhandenes Fass oder eine Truhe.\n"
                     + "/kompass entfernen <x> <y> <z> löst eine Bindung."), false);
         }
@@ -294,7 +297,7 @@ public final class KompassMod implements ModInitializer {
         if (learning != null && learning.hasActive(player)) return learning.resume(player, hint);
         Quest quest = QuestCatalog.byId(progress(player).activeQuest == null ? "" : progress(player).activeQuest).orElse(null);
         if (quest == null) {
-            tell(player, "Du hast gerade keine offene Aufgabe. Suche ein Quest-Versteck.");
+            tell(player, "Du hast gerade keine offene Challenge. Suche ein Quest-Versteck.");
             return 0;
         }
         show(player, quest, hint ? "Hinweis: " + quest.hint() : null);
@@ -305,11 +308,11 @@ public final class KompassMod implements ModInitializer {
         WorldState.Progress progress = progress(player);
         Quest quest = QuestCatalog.byId(id).orElse(null);
         if (quest == null || !id.equals(progress.activeQuest) || !progress.discovered.contains(id)) {
-            tell(player, "Diese Aufgabe ist gerade nicht geöffnet. Nutze /kompass weiter.");
+            tell(player, "Diese Challenge ist gerade nicht geöffnet. Nutze /kompass weiter.");
             return 0;
         }
         if (progress.completed.contains(id)) {
-            tell(player, "Diese Aufgabe hast du bereits gelöst.");
+            tell(player, "Diese Challenge hast du bereits gelöst.");
             return 0;
         }
         if (!quest.matchesAnswer(response)) {
@@ -342,15 +345,15 @@ public final class KompassMod implements ModInitializer {
             village.journal(player);
         }
         WorldState.Progress progress = progress(player);
-        if (!progress.discovered.isEmpty()) tell(player, "Zusätzliche Übungsfässer: " + progress.completed.size()
-                + "/" + QuestCatalog.all().size() + " Aufgaben gelöst.");
+        if (!progress.discovered.isEmpty()) tell(player, "Zusätzliche Schatzfässer: " + progress.completed.size()
+                + "/" + QuestCatalog.all().size() + " Challenges gelöst.");
         for (Quest quest : QuestCatalog.all()) {
             if (progress.discovered.contains(quest.id())) {
                 tell(player, (progress.completed.contains(quest.id()) ? "✓ " : "Offen: ") + quest.title());
             }
         }
         if (progress.activeQuest != null) {
-            tell(player, "Mit /kompass weiter öffnest du deine letzte Aufgabe.");
+            tell(player, "Mit /kompass weiter öffnest du deine letzte Challenge.");
         }
         return 1;
     }

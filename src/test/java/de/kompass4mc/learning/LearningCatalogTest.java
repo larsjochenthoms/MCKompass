@@ -18,10 +18,10 @@ class LearningCatalogTest {
     @Test
     void bothSubjectsHaveVariedTasksAndEveryIdResolves() {
         List<LearningTask> tasks = LearningCatalog.all();
-        assertEquals(48, tasks.size());
-        assertEquals(48, new HashSet<>(tasks.stream().map(LearningTask::id).toList()).size());
-        assertEquals(24, tasks.stream().filter(task -> task.subject() == Subject.MATH).count());
-        assertEquals(24, tasks.stream().filter(task -> task.subject() == Subject.GERMAN).count());
+        assertEquals(144, tasks.size());
+        assertEquals(144, new HashSet<>(tasks.stream().map(LearningTask::id).toList()).size());
+        assertEquals(80, tasks.stream().filter(task -> task.subject() == Subject.MATH).count());
+        assertEquals(64, tasks.stream().filter(task -> task.subject() == Subject.GERMAN).count());
         assertEquals(Set.of("Mila", "Jaro", "Lio"), new HashSet<>(tasks.stream().map(LearningTask::npcName).toList()));
         for (Difficulty difficulty : Difficulty.values()) {
             assertTrue(tasks.stream().anyMatch(task -> task.difficulty() == difficulty), difficulty.name());
@@ -81,7 +81,7 @@ class LearningCatalogTest {
             }
         }
         assertEquals(Set.of("borrowing", "groups_added", "area_perimeter", "units", "sequence",
-                "cause_consequence", "noun_verb", "final_sound", "tense", "person"), tasksByPattern.keySet());
+                "cause_consequence", "noun_verb", "final_sound", "tense", "person", "build_area_border"), tasksByPattern.keySet());
         tasksByPattern.forEach((pattern, tasks) -> assertTrue(tasks.size() >= 2, pattern));
     }
 
@@ -102,8 +102,8 @@ class LearningCatalogTest {
     void showingTasksUseCommonVanillaBlocksAndFitInASingleStack() {
         List<LearningTask> physical = LearningCatalog.all().stream()
                 .filter(task -> task.interaction() == Interaction.SHOW_STACK).toList();
-        assertEquals(4, physical.size());
-        assertEquals(Set.of("minecraft:cobblestone", "minecraft:oak_planks"),
+        assertEquals(12, physical.size());
+        assertEquals(Set.of("minecraft:cobblestone", "minecraft:oak_planks", "minecraft:bread"),
                 new HashSet<>(physical.stream().map(LearningTask::itemId).toList()));
         for (LearningTask task : physical) {
             int count = Integer.parseInt(task.expectedAnswer());

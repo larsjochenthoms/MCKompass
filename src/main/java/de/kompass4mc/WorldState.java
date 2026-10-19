@@ -135,6 +135,26 @@ public final class WorldState {
             if (player.has("activeTaskId") && !player.get("activeTaskId").isJsonNull()) {
                 requireString(player.get("activeTaskId"));
             }
+            if (player.has("cards")) {
+                for (JsonElement value : requireObject(player.get("cards")).asMap().values()) {
+                    JsonObject card = requireObject(value);
+                    requireInteger(card.get("box"), true); requireInteger(card.get("reviews"), true);
+                    requireInteger(card.get("lastReviewMillis"), false); requireInteger(card.get("dueMillis"), false);
+                }
+            }
+            if (player.has("offers")) {
+                for (JsonElement value : requireObject(player.get("offers")).asMap().values()) {
+                    JsonObject offer = requireObject(value);
+                    requireString(offer.get("ticket")); requireString(offer.get("taskId"));
+                    requireInteger(offer.get("restockAt"), false);
+                    for (String field : Set.of("completed", "rewarded", "materialsIssued")) requireBoolean(offer.get(field));
+                    if (offer.has("hintUsed")) requireBoolean(offer.get("hintUsed"));
+                    if (offer.has("site") && !offer.get("site").isJsonNull()) {
+                        JsonObject site = requireObject(offer.get("site")); requireString(site.get("dimension"));
+                        for (String field : Set.of("x", "y", "z")) requireInteger(site.get(field), true);
+                    }
+                }
+            }
             for (String field : Set.of("completed", "rewarded")) {
                 if (player.has(field)) {
                     requireStringArray(player.get(field));

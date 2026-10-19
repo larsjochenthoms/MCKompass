@@ -27,10 +27,9 @@ public final class NpcAppearance {
         }
         skin.ifPresent(value -> {
             Component original = entity.getCustomName();
-            if (original == null) original = Component.literal(value.residentName());
-            if (!Objects.equals(original.getStyle().getInsertion(), value.marker())) {
-                entity.setCustomName(original.copy().withStyle(style -> style.withInsertion(value.marker())));
-            }
+            if (original == null || RoamingNpcs.isNpc(entity)) original = Component.literal(value.residentName());
+            Component marked = original.copy().withStyle(style -> style.withInsertion(value.marker()));
+            if (!Objects.equals(entity.getCustomName(), marked)) entity.setCustomName(marked);
         });
     }
 

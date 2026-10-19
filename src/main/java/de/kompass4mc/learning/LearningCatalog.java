@@ -16,14 +16,14 @@ public final class LearningCatalog {
     private static final List<LearningTask> BASE = List.of(
             task("subtract_store", "Mila", "Nachschub für den Weg",
                     "Ich habe 867 Pflastersteine im Lager gezählt. Für einen Weg habe ich 243 herausgenommen.",
-                    "Wie viele sind noch da? Rechne 867 − 243. Gib die Zahl ein.",
+                    "Wie viele sind noch da? Gib die Zahl ein.",
                     List.of(), "624",
                     "Schreibe Einer unter Einer, Zehner unter Zehner und Hunderter unter Hunderter.",
                     "7 − 3 = 4, 6 − 4 = 2 und 8 − 2 = 6. Es bleiben 624 Pflastersteine.",
                     Skill.SUBTRACTION, Difficulty.EASY, List.of()),
             task("subtract_borrow_1", "Jaro", "Das große Baulager",
                     "Für einen Tunnel kamen 7 010 Steine an. Davon sind 3 856 schon verbaut.",
-                    "Wie viele Steine bleiben? Rechne 7 010 − 3 856. Gib die Zahl ein.",
+                    "Wie viele Steine bleiben? Gib die Zahl ein.",
                     List.of(), "3154",
                     "Du darfst einen Tausender in Hunderter, einen Hunderter in Zehner und einen Zehner in Einer entbündeln.",
                     "7 010 − 3 856 = 3 154. Die Probe ist 3 154 + 3 856 = 7 010.",
@@ -54,7 +54,7 @@ public final class LearningCatalog {
                     Skill.PERIMETER, Difficulty.MEDIUM, List.of(areaInsteadOfPerimeter("48"))),
             task("subtract_borrow_2", "Lio", "Die Fackelrechnung",
                     "Ich hatte 402 Fackeln. An Reisende habe ich 158 abgegeben.",
-                    "Wie viele Fackeln habe ich noch? Rechne 402 − 158. Gib die Zahl ein.",
+                    "Wie viele Fackeln habe ich noch? Gib die Zahl ein.",
                     List.of(), "244", "Für die Einer brauchst du einen Zehner. Weil dort eine Null steht, beginne beim Hunderter.",
                     "402 − 158 = 244. Die Probe ist 244 + 158 = 402.",
                     Skill.SUBTRACTION, Difficulty.MEDIUM, List.of(borrowing("356"))),
@@ -111,9 +111,9 @@ public final class LearningCatalog {
                     Skill.READING_SEQUENCE, Difficulty.MEDIUM, List.of(sequence("Er winkt ins Dorf."))),
             task("noun_garden_1", "Mila", "Ein lesbares Gartenschild",
                     "Auf meinem Schild steht: ‚DIE KINDER PFLANZEN BLUMEN.‘ Ich möchte es in normaler Schreibweise neu schreiben.",
-                    "Welches der folgenden Wörter ist in diesem Satz ein Nomen und wird großgeschrieben?",
+                    "Welches Wort braucht mitten auf dem Schild einen großen Anfangsbuchstaben?",
                     List.of("pflanzen", "Blumen", "die", "für"), "Blumen",
-                    "Zu einem Nomen passt häufig ein Artikel: die Blume, die Blumen.",
+                    "Man kann ‚die Blume‘ oder ‚die Blumen‘ sagen.",
                     "‚Blumen‘ ist ein Nomen. ‚pflanzen‘ sagt in diesem Satz, was die Kinder tun.",
                     Skill.SPELLING, Difficulty.EASY, List.of(nounAndVerb("pflanzen"))),
             task("spelling_dog_1", "Lio", "Das Schild am Hof",
@@ -124,7 +124,7 @@ public final class LearningCatalog {
                     "In ‚Hunde‘ hörst du das d. Deshalb schreiben wir auch ‚Hund‘ mit d.",
                     Skill.SPELLING, Difficulty.MEDIUM, List.of(finalSound("Hunt"))),
             task("grammar_carry_1", "Jaro", "Ein Bericht für heute",
-                    "In meinem alten Baubuch steht: ‚Wir trugen die Kisten zum Boot.‘ Für den heutigen Bericht brauche ich die Gegenwart mit ‚wir‘.",
+                    "In meinem alten Baubuch steht: ‚Wir trugen die Kisten zum Boot.‘ Heute machen wir es wieder. Was schreibe ich heute?",
                     "Welcher Satz passt?",
                     List.of("Wir trugen die Kisten zum Boot.", "Wir tragen die Kisten zum Boot.", "Ihr tragt die Kisten zum Boot.", "Wir werden die Kisten zum Boot tragen."),
                     "Wir tragen die Kisten zum Boot.", "Behalte ‚wir‘ bei und erzähle, was jetzt passiert.",
@@ -147,7 +147,7 @@ public final class LearningCatalog {
                     Skill.READING_SEQUENCE, Difficulty.MEDIUM, List.of(sequence("Er räumt das Werkzeug weg."))),
             task("noun_torches_2", "Lio", "Ein Schild am Weg",
                     "Auf meinem neuen Schild steht in Großbuchstaben: ‚DIE FACKELN LEUCHTEN HELL.‘ Ich möchte normal schreiben.",
-                    "Welches der folgenden Wörter ist in diesem Satz ein Nomen und wird großgeschrieben?",
+                    "Welches Wort braucht mitten auf dem Schild einen großen Anfangsbuchstaben?",
                     List.of("leuchten", "hell", "und", "Fackeln"), "Fackeln",
                     "Man kann ‚die Fackel‘ oder ‚die Fackeln‘ sagen.",
                     "‚Fackeln‘ ist ein Nomen. ‚leuchten‘ ist in diesem Satz das Verb.",
@@ -160,7 +160,7 @@ public final class LearningCatalog {
                     "In ‚Berge‘ hörst du das g. Daher wird ‚Berg‘ mit g geschrieben.",
                     Skill.SPELLING, Difficulty.MEDIUM, List.of(finalSound("Berk"))),
             task("grammar_bring_2", "Mila", "Ein neuer Gartenbericht",
-                    "Gestern schrieb ich: ‚Wir brachten die Setzlinge zum Beet.‘ Heute soll derselbe Satz in der Gegenwart mit ‚wir‘ stehen.",
+                    "Gestern schrieb ich: ‚Wir brachten die Setzlinge zum Beet.‘ Heute machen wir es wieder. Was schreibe ich heute?",
                     "Welcher Satz passt?",
                     List.of("Ihr bringt die Setzlinge zum Beet.", "Wir werden die Setzlinge zum Beet bringen.", "Wir brachten die Setzlinge zum Beet.", "Wir bringen die Setzlinge zum Beet."),
                     "Wir bringen die Setzlinge zum Beet.", "Die Person bleibt ‚wir‘. Das Verb soll sagen, was jetzt passiert.",
@@ -175,8 +175,8 @@ public final class LearningCatalog {
                     Skill.READING_DETAIL, Difficulty.EASY, "minecraft:oak_planks", List.of())
     );
 
-    private static final List<LearningTask> ALL = java.util.stream.Stream.concat(
-            BASE.stream(), KompassInspiredTasks.all().stream()).toList();
+    private static final List<LearningTask> ALL = java.util.stream.Stream.of(BASE, KompassInspiredTasks.all(), JourneyChallenges.all())
+            .flatMap(List::stream).map(LearningCatalog::withRole).toList();
 
     private static final Map<String, LearningTask> BY_ID;
 
@@ -199,6 +199,14 @@ public final class LearningCatalog {
 
     public static Optional<LearningTask> byId(String id) {
         return id == null ? Optional.empty() : Optional.ofNullable(BY_ID.get(id));
+    }
+
+    private static LearningTask withRole(LearningTask task) {
+        String owner = ChallengeRole.forTask(task).residentName();
+        return new LearningTask(task.id(), owner, task.title(), task.story(),
+                task.question().replace(" Gib die Zahl ein.", ""), task.choices(), task.expectedAnswer(),
+                task.hint(), task.explanation(), task.subject(), task.skill(), task.difficulty(),
+                task.interaction(), task.itemId(), task.patterns());
     }
 
     private static LearningTask task(String id, String npc, String title, String story, String question,

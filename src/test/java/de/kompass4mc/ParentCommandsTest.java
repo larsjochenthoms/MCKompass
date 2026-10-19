@@ -101,7 +101,7 @@ class ParentCommandsTest {
         List<String> body = dialog.common().body().stream()
                 .map(part -> assertInstanceOf(PlainMessage.class, part).contents().getString()).toList();
         assertTrue(body.stream().anyMatch(line -> line.contains("1 Aufgaben gelöst")));
-        assertTrue(body.stream().anyMatch(line -> line.contains("Nur neue Lernreisende")));
+        assertTrue(body.stream().anyMatch(line -> line.contains("Kartei:")));
         assertEquals(1, dialog.actions().size());
         var export = dialog.actions().getFirst().action().orElseThrow().createAction(Map.of()).orElseThrow();
         assertEquals("kompass eltern export_uuid " + PLAYER,

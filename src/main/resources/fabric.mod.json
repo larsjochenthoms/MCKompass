@@ -3,7 +3,7 @@
   "id": "kompass4mc",
   "version": "${version}",
   "name": "Kompass-Abenteuer",
-  "description": "Lernreisende mit Mathematik- und Deutschaufträgen, Belohnungen und lokalen Lernnotizen für Eltern.",
+  "description": "Reisende mit eigenen Geschichten, Bau-Challenges und überraschenden Geschenken.",
   "environment": "*",
   "entrypoints": { "main": ["de.kompass4mc.KompassMod"] },
   "mixins": ["kompass4mc.mixins.json"],

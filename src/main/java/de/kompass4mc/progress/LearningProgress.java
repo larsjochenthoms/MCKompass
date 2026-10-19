@@ -22,14 +22,24 @@ public final class LearningProgress {
     public Set<String> rewarded = new LinkedHashSet<>();
     public List<Attempt> attempts = new ArrayList<>();
     public Map<String, TaskStats> stats = new LinkedHashMap<>();
+    public Map<String, LeitnerDeck.Card> cards = new LinkedHashMap<>();
+    public Map<String, ChallengeOffer> offers = new LinkedHashMap<>();
 
     public Attempt recordAnswer(LearningTask task, String response, long timestamp, boolean hintUsed) {
+        return answer(task, response, timestamp, hintUsed, true);
+    }
+
+    public Attempt recordChallengeAnswer(LearningTask task, String response, long timestamp, boolean hintUsed) {
+        return answer(task, response, timestamp, hintUsed, false);
+    }
+
+    private Attempt answer(LearningTask task, String response, long timestamp, boolean hintUsed, boolean legacyHints) {
         TaskStats taskStats = taskStats(task);
         String answer = limited(response);
         boolean correct = task.matchesAnswer(answer);
         List<String> patternIds = correct ? List.of()
                 : task.responsePatterns(answer).stream().map(ErrorPattern::id).toList();
-        boolean usedHint = hintUsed || taskStats.hints > 0;
+        boolean usedHint = hintUsed || (legacyHints && taskStats.hints > 0);
         if (taskStats.attempts == 0) {
             taskStats.firstAttemptCorrect = correct;
             taskStats.firstAttemptHintUsed = usedHint;
@@ -51,6 +61,7 @@ public final class LearningProgress {
         Attempt attempt = new Attempt(task.id(), timestamp, answer, correct, usedHint,
                 patternIds, AttemptType.ANSWER);
         append(attempt);
+        LeitnerDeck.review(this, task.id(), correct, timestamp);
         return attempt;
     }
 
@@ -82,13 +93,15 @@ public final class LearningProgress {
         copy.rewarded = new LinkedHashSet<>(rewarded);
         copy.attempts = new ArrayList<>(attempts);
         stats.forEach((taskId, taskStats) -> copy.stats.put(taskId, taskStats.copy()));
+        cards.forEach((id, card) -> copy.cards.put(id, card.copy()));
+        offers.forEach((name, offer) -> copy.offers.put(name, offer.copy()));
         return copy;
     }
 
     /** Used when loading a world: malformed notes must never silently replace saved progress. */
     public void validate() {
         if (playerName == null || completed == null || rewarded == null || attempts == null || stats == null
-                || attempts.size() > MAX_EVENTS || !completed.containsAll(rewarded)) {
+                || cards == null || offers == null || attempts.size() > MAX_EVENTS || !completed.containsAll(rewarded)) {
             throw new IllegalArgumentException("Unvollständiger Lernfortschritt.");
         }
         if (activeTaskId != null) {
@@ -96,6 +109,28 @@ public final class LearningProgress {
         }
         completed.forEach(LearningProgress::validateTaskId);
         rewarded.forEach(LearningProgress::validateTaskId);
+        cards.forEach((id, card) -> {
+            validateTaskId(id);
+            if (card == null || card.box < 1 || card.box > 5 || card.reviews < 0
+                    || card.lastReviewMillis < 0 || card.dueMillis < card.lastReviewMillis)
+                throw new IllegalArgumentException("Ungültige Karteikarte.");
+        });
+        offers.forEach((name, offer) -> {
+            de.kompass4mc.learning.ChallengeRole.named(name);
+            if (offer == null || offer.ticket == null || offer.ticket.isBlank() || offer.ticket.length() > 128
+                    || offer.restockAt < 0 || offer.rewarded != offer.completed
+                    || (offer.site != null && !offer.materialsIssued))
+                throw new IllegalArgumentException("Ungültige Challenge.");
+            validateTaskId(offer.taskId);
+            LearningCatalog.byId(offer.taskId).ifPresent(task -> {
+                if (!de.kompass4mc.learning.ChallengeRole.forTask(task).residentName().equals(name)
+                        || ((offer.site != null || offer.materialsIssued)
+                                && task.interaction() != de.kompass4mc.learning.Interaction.BUILD))
+                    throw new IllegalArgumentException("Challenge passt nicht zum Bewohner.");
+            });
+            if (offer.site != null && (offer.site.dimension() == null || offer.site.dimension().isBlank()))
+                throw new IllegalArgumentException("Bauplatz ohne Welt.");
+        });
         for (Map.Entry<String, TaskStats> entry : stats.entrySet()) {
             validateTaskId(entry.getKey());
             LearningTask task = LearningCatalog.byId(entry.getKey()).orElse(null);
